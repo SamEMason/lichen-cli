@@ -1,0 +1,66 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# Poetry
+poetry.lock
+# If you want to exclude the virtualenv created by poetry
+# .venv/
+
+# Pipenv
+Pipfile.lock
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# PyInstaller
+*.spec
+
+# Pytest
+.pytest_cache/
+
+# VSCode
+.vscode/
+
+# MyPy
+.mypy_cache/
+
+# Coverage
+.coverage
+htmlcov/
+coverage.xml
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# macOS
+.DS_Store
+
+# IDEs
+.idea/
+*.sw?
+
+# dotenv
+.env
+.env.*
+
+# SQLite
+*.sqlite3
+*.db
+
+# Typing stub files
+typings/
+
+# Node (if using frontend in project)
+node_modules/
