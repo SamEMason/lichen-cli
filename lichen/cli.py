@@ -11,15 +11,15 @@ app = typer.Typer()
 @app.command()
 def build():
     """Build the lichen app"""
-    print(f"Build in progress...")
+    print(f"build process under construction...")
 
 
 @app.command()
 def destroy(name: str):
-    config = Config()
-
     """Destroy the specified lichen monorepo project"""
+    config = Config()
     path = Path(f"{config.temp_dir}/{name}")
+
     if path.exists() and path.is_dir():
         shutil.rmtree(path)
         print(f"Project '{name}' destroyed.")
@@ -43,7 +43,7 @@ def desolate():
 @app.command()
 def dev():
     """Launch the lichen dev server"""
-    print(f"lichen dev server running...")
+    print(f"dev server under construction...")
 
 
 @app.command()
