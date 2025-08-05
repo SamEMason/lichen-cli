@@ -1,0 +1,5 @@
+# Global Lichen CLI Configuration
+[dev]
+mode = dev
+lichen_dir = lichen
+temp_dir = temp
