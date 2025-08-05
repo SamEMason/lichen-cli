@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 from .config import Config
 from .scaffold import create_monorepo
+from .utils import run_tests 
 
 app = typer.Typer()
 
@@ -60,3 +61,9 @@ def service(command: str, names: list[str]):
     elif command == "remove":
         for name in names:
             print(f"Service: {name} removed!")
+
+
+@app.command()
+def test():
+    """Run tests using `pytest`"""
+    run_tests()
