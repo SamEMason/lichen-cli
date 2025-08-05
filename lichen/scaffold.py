@@ -16,4 +16,3 @@ def create_monorepo(name: str):
     # Create root project directory
     make_root_dir(name)
 
-    
