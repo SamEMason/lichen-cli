@@ -3,7 +3,7 @@ import shutil
 from pathlib import Path
 from .config import Config
 from .scaffold import create_monorepo
-from .utils import run_tests 
+from utils.tests import run_tests 
 
 app = typer.Typer()
 
