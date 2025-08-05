@@ -1,8 +1,10 @@
 import os
+import subprocess
 from pathlib import Path
 
 
 # Creating Lichen Stack Structure
+
 
 def _make_dir(name: str):
     if not Path(name).exists():
@@ -22,3 +24,8 @@ def make_temp_dir():
 def make_root_dir(name: str):
     _make_dir(name)
 
+
+# Test utils
+def run_tests():
+    """Run tests using `pytest`"""
+    subprocess.run(["pytest"])
