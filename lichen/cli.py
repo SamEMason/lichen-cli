@@ -1,7 +1,7 @@
 import typer
 import shutil
 from pathlib import Path
-
+from .config import Config
 from .scaffold import create_monorepo
 
 app = typer.Typer()
@@ -15,13 +15,28 @@ def build():
 
 @app.command()
 def destroy(name: str):
+    config = Config()
+
     """Destroy the specified lichen monorepo project"""
-    path = Path(name)
+    path = Path(f"{config.temp_dir}/{name}")
     if path.exists() and path.is_dir():
         shutil.rmtree(path)
         print(f"Project '{name}' destroyed.")
     else:
         print(f"Project '{name}' does not exist.")
+
+
+@app.command()
+def desolate():
+    """Destroy the temp/ directory"""
+    config = Config()
+    temp_path = Path(config.temp_dir)
+
+    if temp_path.exists() and temp_path.is_dir():
+        shutil.rmtree(temp_path)
+        print(f"Directory '{config.temp_dir}' destroyed.")
+    else:
+        print(f"Directory '{config.temp_dir}' does not exist.")
 
 
 @app.command()
@@ -34,7 +49,6 @@ def dev():
 def new(name: str):
     """Create new lichen stack monorepo project"""
     create_monorepo(name)
-    print(f"New project: {name} created!")
 
 
 @app.command()
