@@ -7,7 +7,7 @@ def test_make_dir(global_cleanup: Path):
     utils._make_dir("temp")  # type: ignore[reportPrivateUsage]
 
     # Determine if the directory exists
-    dir_exists = Path("temp").exists()
+    dir_exists = Path("temp").is_dir()
     assert dir_exists == True
 
 
@@ -16,7 +16,7 @@ def test_temp_dir(global_cleanup: Path):
     utils.make_temp_dir()
 
     # Determine if the directory exists
-    dir_exists = Path("temp/").exists()
+    dir_exists = Path("temp/").is_dir()
     assert dir_exists == True
 
 
@@ -25,7 +25,7 @@ def test_root_dir(global_cleanup: Path):
     utils.make_root_dir("test_project")
 
     # Determine if the directory exists
-    dir_exists = Path("test_project/").exists()
+    dir_exists = Path("test_project/").is_dir()
     assert dir_exists == True
 
 
