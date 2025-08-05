@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from lichen import utils
 
@@ -8,7 +7,7 @@ def test_make_dir(global_cleanup: Path):
     utils._make_dir("temp")  # type: ignore[reportPrivateUsage]
 
     # Determine if the directory exists
-    dir_exists = os.path.isdir("temp")
+    dir_exists = Path("temp").exists()
     assert dir_exists == True
 
 
@@ -17,7 +16,7 @@ def test_temp_dir(global_cleanup: Path):
     utils.make_temp_dir()
 
     # Determine if the directory exists
-    dir_exists = os.path.isdir("temp/")
+    dir_exists = Path("temp/").exists()
     assert dir_exists == True
 
 
@@ -26,5 +25,7 @@ def test_root_dir(global_cleanup: Path):
     utils.make_root_dir("test_project")
 
     # Determine if the directory exists
-    dir_exists = os.path.isdir("test_project/")
+    dir_exists = Path("test_project/").exists()
     assert dir_exists == True
+
+
