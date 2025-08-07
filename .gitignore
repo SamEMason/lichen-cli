@@ -64,3 +64,5 @@ typings/
 
 # Node (if using frontend in project)
 node_modules/
+
+temp
