@@ -31,8 +31,12 @@ def make_dir(name: str):
 
 
 def make_file(filename: str, mode: str = "w", content: str = ""):
-    with open(filename, mode) as file:
-        file.write(content)
+    if "r" in mode:
+        raise ValueError("Cannot use read mode to make a file")
+
+    if not get_path(filename).exists():
+        with open(filename, mode) as file:
+            file.write(content)
 
 
 def load_toml(filepath: str, mode: str = "rb") -> dict[str, Any]:

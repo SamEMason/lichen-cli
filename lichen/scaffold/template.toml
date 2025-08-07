@@ -1,0 +1,6 @@
+[[default]]
+othervalue = "something other"
+
+[[default.nodes]]
+type = "dir"
+path = "project_name"

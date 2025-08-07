@@ -1,3 +1,4 @@
+import pytest
 from pathlib import Path
 from lichen.utils.io import get_path, get_project_root, load_toml, make_dir, make_file
 
@@ -30,7 +31,7 @@ def test_make_dir(global_cleanup: Path):
     assert dir_exists == True
 
 
-def test_make_file(global_cleanup: Path):
+def test_make_file_makes_file(global_cleanup: Path):
     # Create temp/ dir for test
     make_dir("temp")
 
@@ -40,6 +41,14 @@ def test_make_file(global_cleanup: Path):
     # Determine if the file exists
     file_exists = Path("temp/test.txt").exists()
     assert file_exists == True
+
+
+def test_make_file_raises_on_read_mode():
+    test_file = "test_file.txt"
+    mode = "r"
+
+    with pytest.raises(ValueError, match="Cannot use read mode to make a file"):
+        make_file(test_file, mode)
 
 
 def test_load_toml():
