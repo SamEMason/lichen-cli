@@ -1,5 +1,5 @@
 from lichen.config import Config
-from lichen.utils.io import make_root_dir, make_temp_dir
+from lichen.utils.io import make_dir
 
 
 def scaffold_project(name: str):
@@ -8,11 +8,11 @@ def scaffold_project(name: str):
     # Nest directory structure in temp/ in dev mode
     if config.mode == "dev":
         # Create temp/ directory
-        make_temp_dir()
+        make_dir("temp")
 
         # Append `name` with temp/
         name = f"{config.temp_dir}/{name}"
 
     # Create root project directory
-    make_root_dir(name)
+    make_dir(name)
 
