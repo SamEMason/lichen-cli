@@ -1,4 +1,4 @@
-from .config import Config
+from lichen.config import Config
 from lichen.utils.io import make_root_dir, make_temp_dir
 
 
