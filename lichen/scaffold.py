@@ -2,7 +2,7 @@ from lichen.config import Config
 from lichen.utils.io import make_root_dir, make_temp_dir
 
 
-def create_monorepo(name: str):
+def scaffold_project(name: str):
     config = Config()
 
     # Nest directory structure in temp/ in dev mode
