@@ -1,5 +1,5 @@
 from typer.testing import CliRunner
-from lichen import cli
+from lichen.cli.main import app
 
 runner = CliRunner()
 
