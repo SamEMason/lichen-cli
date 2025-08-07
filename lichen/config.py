@@ -1,6 +1,6 @@
 class Config:
     def __init__(
-        self, lichen_dir: str = "lichen", mode: str = "dev", temp_dir: str = "temp"
+        self, lichen_dir: str = "lichen", mode: str = "dev", temp_dir: str = "dev"
     ):
         self.mode = mode
         self.lichen_dir = lichen_dir

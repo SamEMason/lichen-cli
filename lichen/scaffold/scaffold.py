@@ -8,7 +8,7 @@ def scaffold_project(name: str):
     # Nest directory structure in temp/ in dev mode
     if config.mode == "dev":
         # Create temp/ directory
-        make_dir("temp")
+        make_dir(config.mode)
 
         # Append `name` with temp/
         name = f"{config.temp_dir}/{name}"
