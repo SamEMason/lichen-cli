@@ -16,7 +16,7 @@ def get_project_root() -> Path:
 
 def get_path(filepath: str) -> Path:
     root = get_project_root()
-    return (root / filepath)
+    return root / filepath
 
 
 def make_dir(name: str):
@@ -35,6 +35,6 @@ def make_file(filename: str, mode: str = "w", content: str = ""):
         file.write(content)
 
 
-def load_toml(filepath: str) -> dict[str, Any]:
-    with open(filepath, "rb") as file:
+def load_toml(filepath: str, mode: str = "rb") -> dict[str, Any]:
+    with open(filepath, mode) as file:
         return tomllib.load(file)
