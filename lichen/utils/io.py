@@ -1,5 +1,22 @@
 import os
+import tomllib
 from pathlib import Path
+from typing import Any
+
+
+def get_project_root() -> Path:
+    start = Path(__file__).resolve()
+
+    for parent in start.parents:
+        if (parent / "pyproject.toml").exists():
+            return parent
+
+    raise RuntimeError("Project root not found")
+
+
+def get_path(filepath: str) -> Path:
+    root = get_project_root()
+    return (root / filepath)
 
 
 def make_dir(name: str):
@@ -16,3 +33,8 @@ def make_dir(name: str):
 def make_file(filename: str, mode: str = "w", content: str = ""):
     with open(filename, mode) as file:
         file.write(content)
+
+
+def load_toml(filepath: str) -> dict[str, Any]:
+    with open(filepath, "rb") as file:
+        return tomllib.load(file)

@@ -1,5 +1,24 @@
 from pathlib import Path
-from lichen.utils.io import make_dir, make_file
+from lichen.utils.io import get_path, get_project_root, load_toml, make_dir, make_file
+
+
+def test_get_project_root():
+    # File in root
+    root_file = "pyproject.toml"
+
+    # Get project root using get_project_root
+    project_root = get_project_root()
+
+    # Determine if pyproject.toml is in the returned root path
+    assert (project_root / root_file).exists()
+
+
+def test_get_path():
+    # File to test against
+    target_file = "tests/test_utils.py"
+
+    # Determine if this file exists in the returned path
+    assert get_path(target_file).exists()
 
 
 def test_make_dir(global_cleanup: Path):
@@ -18,8 +37,18 @@ def test_make_file(global_cleanup: Path):
     # Create `test.txt` file
     make_file("temp/test.txt")
 
-    #Determine if the file exists
+    # Determine if the file exists
     file_exists = Path("temp/test.txt").exists()
     assert file_exists == True
 
 
+def test_load_toml():
+    # Expected test values
+    expected_contents = {"test": {"value": 1}}
+
+    # Read file: `load_toml.toml`
+    filepath = get_path("tests/test_data/load_toml.toml")
+    file_contents = load_toml(filepath=str(filepath))
+
+    # Assert that the file contents are loaded as expected
+    assert file_contents == expected_contents
