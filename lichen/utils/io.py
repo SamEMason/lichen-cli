@@ -20,9 +20,12 @@ def get_path(filepath: str) -> Path:
 
 
 def make_dir(name: str):
-    if not Path(name).exists():
+    root_dir = get_project_root()
+    new_dir_path = root_dir / name
+
+    if not Path(new_dir_path).exists():
         try:
-            os.mkdir(name)
+            os.mkdir(new_dir_path)
             print(f"Directory `{name}' created successfully.")
         except PermissionError:
             print(f"Permission denied: Unable to create '{name}'.")
