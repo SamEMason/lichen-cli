@@ -1,4 +1,3 @@
-import os
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -19,27 +18,29 @@ def get_path(filepath: str) -> Path:
     return root / filepath
 
 
-def make_dir(name: str):
-    root_dir = get_project_root()
-    new_dir_path = root_dir / name
+def make_dir(path: str | Path):
+    p = Path(path)
 
-    if not Path(new_dir_path).exists():
-        try:
-            os.mkdir(new_dir_path)
-            print(f"Directory `{name}' created successfully.")
-        except PermissionError:
-            print(f"Permission denied: Unable to create '{name}'.")
-        except Exception as e:
-            print(f"An error has occurred: {e}")
+    p.mkdir(parents=True, exist_ok=True)
+    return p
 
 
-def make_file(filename: str, mode: str = "w", content: str = ""):
-    if "r" in mode:
-        raise ValueError("Cannot use read mode to make a file")
+def make_file(path: str | Path, content: str = "", overwrite: bool = False):
+    # Get path from path argument
+    p = Path(path)
 
-    if not get_path(filename).exists():
-        with open(filename, mode) as file:
-            file.write(content)
+    # Create ancestor directiries if necessary
+    p.parent.mkdir(parents=True, exist_ok=True)
+
+    # Return the path if the file already exists and overwrite is False
+    if p.exists() and not overwrite:
+        return p
+    
+    # Create the file with optionally inputted content
+    with p.open("w") as file:
+        file.write(content)
+
+    return p
 
 
 def load_toml(filepath: str, mode: str = "rb") -> dict[str, Any]:
