@@ -65,4 +65,6 @@ typings/
 # Node (if using frontend in project)
 node_modules/
 
-temp
+# Development directories
+temp/
+dev/
