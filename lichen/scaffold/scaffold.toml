@@ -2,5 +2,10 @@
 othervalue = "something other"
 
 [[default.nodes]]
-type = "dir"
-path = "project_name"
+type = "file"
+path = ".lichen/registry.toml"
+
+[[default.nodes]]
+type = "file"
+path = ".gitignore"
+
