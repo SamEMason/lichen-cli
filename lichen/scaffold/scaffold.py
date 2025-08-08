@@ -15,4 +15,3 @@ def scaffold_project(name: str):
 
     # Create root project directory
     make_dir(name)
-
