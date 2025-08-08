@@ -7,7 +7,7 @@ from lichen.utils.io import get_project_root
 config = Config()
 
 
-def test_scaffold_project():
+def test_scaffold_project_creates_project_dir():
     # Test directory
     test_dir = "test_project"
 
