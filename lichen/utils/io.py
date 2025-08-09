@@ -13,7 +13,7 @@ def get_project_root() -> Path:
     raise RuntimeError("Project root not found")
 
 
-def get_path(filepath: str) -> Path:
+def get_path(filepath: str | Path) -> Path:
     root = get_project_root()
     return root / filepath
 
