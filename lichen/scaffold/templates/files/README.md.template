@@ -1,0 +1,19 @@
+🌿 Lichen Stack
+
+Lichen Stack is a minimal event-driven desktop application architecture built around:
+
+-   🦀 Tauri — lightweight Rust-based desktop UI
+-   🐍 Python — backend services and logic
+-   🧵 NATS — messaging layer for pub/sub communication
+
+🔧 Features
+
+-   Event-driven backend service architecture
+-   WebSocket streaming to the Tauri UI
+-   Shared binaries and configs for bundled production builds
+-   Support for building offline-native local AI tools (e.g. LLM inference, RAG, crawlers)
+
+🚀 Goals
+Lichen is designed as a reusable starter stack for building local-first tools,
+experiments, and AI-driven workflows with full control over the execution environment.
+It aims to be simple, powerful, and easily extendable.
