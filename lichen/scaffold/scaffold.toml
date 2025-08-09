@@ -8,30 +8,37 @@ description = "Absolute MVP Lichen Stack file tree."
 [[default.nodes]]
 type = "file"
 path = ".lichen/registry.toml"
+template = "lichen/scaffold/templates/files/lichen_registry.toml.template"
 
 [[default.nodes]]
 type = "file"
 path = ".gitignore"
+template = "lichen/scaffold/templates/files/.gitignore.template"
 
 [[default.nodes]]
 type = "file"
 path = ".env.example"
+template = "lichen/scaffold/templates/files/.env.example.template"
 
 [[default.nodes]]
 type = "file"
 path = "pyproject.toml"
+template = "lichen/scaffold/templates/files/pyproject.toml.template"
 
 [[default.nodes]]
 type = "file"
 path = "requirements.txt"
+template = "lichen/scaffold/templates/files/requirements.txt.template"
 
 [[default.nodes]]
 type = "file"
 path = "README.md"
+template = "lichen/scaffold/templates/files/README.md.template"
 
 [[default.nodes]]
 type = "file"
 path = "global.config.toml"
+template = "lichen/scaffold/templates/files/global.config.toml.template"
 
 
 # Gateway Service
