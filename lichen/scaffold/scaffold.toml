@@ -1,6 +1,10 @@
+# Meta Data
 [[default]]
-othervalue = "something other"
+version = "0.0.1"
+description = "Absolute MVP Lichen Stack file tree."
 
+
+# Global Scope
 [[default.nodes]]
 type = "file"
 path = ".lichen/registry.toml"
@@ -8,4 +12,68 @@ path = ".lichen/registry.toml"
 [[default.nodes]]
 type = "file"
 path = ".gitignore"
+
+[[default.nodes]]
+type = "file"
+path = "pyproject.toml"
+
+[[default.nodes]]
+type = "file"
+path = "requirements.txt"
+
+[[default.nodes]]
+type = "file"
+path = "README.md"
+
+[[default.nodes]]
+type = "file"
+path = "global.config.toml"
+
+
+# Gateway Service
+[[default.nodes]]
+type = "file"
+path = "services/gateway/src/main.py"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/src/routes.py"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/requirements.txt"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/local.config.toml"
+[[default.nodes]]
+type = "file"
+path = "services/gateway/.env.example"
+
+
+# Worker Service
+[[default.nodes]]
+type = "file"
+path = "services/worker/src/main.py"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/src/routes.py"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/requirements.txt"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/local.config.toml"
+[[default.nodes]]
+type = "file"
+path = "services/worker/.env.example"
+
+
+# Shared modules
+[[default.nodes]]
+type = "file"
+path = "shared/utils.py"
 
