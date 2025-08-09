@@ -1,4 +1,4 @@
-import tomllib
+import toml
 from pathlib import Path
 from typing import Any
 
@@ -35,7 +35,7 @@ def make_file(path: str | Path, content: str = "", overwrite: bool = False):
     # Return the path if the file already exists and overwrite is False
     if p.exists() and not overwrite:
         return p
-    
+
     # Create the file with optionally inputted content
     with p.open("w") as file:
         file.write(content)
@@ -43,6 +43,13 @@ def make_file(path: str | Path, content: str = "", overwrite: bool = False):
     return p
 
 
-def load_toml(filepath: str, mode: str = "rb") -> dict[str, Any]:
-    with open(filepath, mode) as file:
-        return tomllib.load(file)
+def load_toml(filepath: str | Path) -> dict[str, Any]:
+    path = Path(filepath)
+    return toml.load(path) if path.exists() else {}
+
+
+def write_toml(filepath: str | Path, content: dict[str, str]):
+    path = Path(filepath)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as file:
+        toml.dump(content, file)
