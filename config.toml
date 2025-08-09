@@ -2,4 +2,5 @@
 [dev]
 mode = "dev"
 lichen_dir = "lichen"
-temp_dir = "temp"
+project_name = ""
+temp_dir = "dev"
