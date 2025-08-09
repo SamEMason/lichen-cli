@@ -15,6 +15,10 @@ path = ".gitignore"
 
 [[default.nodes]]
 type = "file"
+path = ".env.example"
+
+[[default.nodes]]
+type = "file"
 path = "pyproject.toml"
 
 [[default.nodes]]
