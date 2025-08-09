@@ -77,3 +77,6 @@ path = "services/worker/.env.example"
 type = "file"
 path = "shared/utils.py"
 
+[[default.nodes]]
+type = "file"
+path = "shared/logging.py"
