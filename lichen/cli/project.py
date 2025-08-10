@@ -44,4 +44,3 @@ def decimate():
 def new(name: str):
     """Create new lichen stack monorepo project"""
     scaffold_project(name)
-

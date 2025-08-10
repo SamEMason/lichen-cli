@@ -1,0 +1,10 @@
+fastapi[standard]
+uvicorn[standard]
+nats-py==2.6.0
+python-dotenv
+pydantic
+pre-commit
+black
+ruff
+pytest
+httpx

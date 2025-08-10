@@ -1,5 +1,5 @@
 [project]
-name = "{{name}}"
+name = "name"
 version = "0.0.1"
 description = "Lichen Stack Project"
 authors = [{ name = "" }]

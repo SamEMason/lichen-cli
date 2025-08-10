@@ -8,7 +8,7 @@ description = "Absolute MVP Lichen Stack file tree."
 [[default.nodes]]
 type = "file"
 path = ".lichen/registry.toml"
-template = "lichen/scaffold/templates/files/lichen_registry.toml.template"
+template = "lichen/scaffold/templates/files/.lichen_registry.template"
 
 [[default.nodes]]
 type = "file"
@@ -23,71 +23,79 @@ template = "lichen/scaffold/templates/files/.env.example.template"
 [[default.nodes]]
 type = "file"
 path = "pyproject.toml"
-template = "lichen/scaffold/templates/files/pyproject.toml.template"
+template = "lichen/scaffold/templates/files/pyproject.template"
 
 [[default.nodes]]
 type = "file"
 path = "requirements.txt"
-template = "lichen/scaffold/templates/files/requirements.txt.template"
+template = "lichen/scaffold/templates/files/requirements.template"
 
 [[default.nodes]]
 type = "file"
 path = "README.md"
-template = "lichen/scaffold/templates/files/README.md.template"
+template = "lichen/scaffold/templates/files/README.template"
 
 [[default.nodes]]
 type = "file"
 path = "global.config.toml"
-template = "lichen/scaffold/templates/files/global.config.toml.template"
+template = "lichen/scaffold/templates/files/global.config.template"
 
 
 # Gateway Service
 [[default.nodes]]
 type = "file"
 path = "services/gateway/src/main.py"
+template = "lichen/scaffold/templates/files/services/gateway/src_main.template"
 
 [[default.nodes]]
 type = "file"
 path = "services/gateway/src/routes.py"
+template = "lichen/scaffold/templates/files/services/gateway/src_routes.template"
 
 [[default.nodes]]
 type = "file"
 path = "services/gateway/requirements.txt"
+template = "lichen/scaffold/templates/files/services/gateway/requirements.template"
 
 [[default.nodes]]
 type = "file"
 path = "services/gateway/local.config.toml"
+template = "lichen/scaffold/templates/files/services/gateway/local.config.template"
+
 [[default.nodes]]
 type = "file"
 path = "services/gateway/.env.example"
-
+template = "lichen/scaffold/templates/files/services/gateway/.env.example.template"
 
 # Worker Service
 [[default.nodes]]
 type = "file"
 path = "services/worker/src/main.py"
-
-[[default.nodes]]
-type = "file"
-path = "services/worker/src/routes.py"
+template = "lichen/scaffold/templates/files/services/worker/src_main.template"
 
 [[default.nodes]]
 type = "file"
 path = "services/worker/requirements.txt"
+template = "lichen/scaffold/templates/files/services/worker/requirements.template"
 
 [[default.nodes]]
 type = "file"
 path = "services/worker/local.config.toml"
+template = "lichen/scaffold/templates/files/services/worker/local.config.template"
+
 [[default.nodes]]
 type = "file"
 path = "services/worker/.env.example"
+template = "lichen/scaffold/templates/files/services/worker/.env.example.template"
 
 
 # Shared modules
 [[default.nodes]]
 type = "file"
 path = "shared/utils.py"
+template = "lichen/scaffold/templates/files/shared/utils.template"
 
 [[default.nodes]]
 type = "file"
 path = "shared/logging.py"
+template = "lichen/scaffold/templates/files/shared/logging.template"

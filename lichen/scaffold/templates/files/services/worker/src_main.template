@@ -1,0 +1,57 @@
+import asyncio
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from nats.aio.client import Client as NATS
+
+
+print("[worker] top level import: main.py loaded")
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[worker] 🌀 lifespan started")
+
+    # Start a task that contains retry logic
+    task = asyncio.create_task(publish_loop())
+    try:
+        yield
+    finally:
+        print("[worker] 🔥 lifespan shutting down")
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            print("[worker] 🛑 task cancelled cleanly")
+
+
+
+app = FastAPI(lifespan=lifespan)
+print("[worker] ✅ FastAPI app instantiated")
+
+
+@app.get("/ping")
+async def ping():
+    return {"status": "CONNECTED"}
+
+
+async def publish_loop():
+    print("[worker] entered piblish_loop")
+    nc = NATS()
+    while True:
+        try:
+            print("[worker] ⏳ connecting to NATS...")
+            await nc.connect("nats://nats:4222")
+            print("[worker] ✅ connected to NATS")
+            break
+        except Exception as e:
+            print(f"[worker] ❌ NATS not ready, retrying in 2s... ({e})")
+            await asyncio.sleep(2)
+
+
+    i = 0
+    while True:
+        msg = f"tick {i}"
+        await nc.publish("lichenevents", msg.encode())
+        print(f"[worker] published: {msg}")
+        i += 1
+        await asyncio.sleep(3)

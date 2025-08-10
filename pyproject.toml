@@ -1,12 +1,10 @@
 [project]
-name = "lichen"
+name = "{{name}}"
 version = "0.0.1"
-description = "CLI for Lichen Stack"
-authors = [{ name = "Samuel Mason" }]
+description = "Lichen Stack Project"
 readme = "README.md"
 requires-python = ">=3.8"
 dependencies = []
+[[project.authors]]
+name = ""
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"

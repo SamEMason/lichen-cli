@@ -53,3 +53,10 @@ def write_toml(filepath: str | Path, content: dict[str, str]):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as file:
         toml.dump(content, file)
+
+
+def load_template(filepath: str | Path) -> str | None:
+    path = Path(filepath)
+    if path.exists():
+        with open(path) as file:
+            return file.read()
