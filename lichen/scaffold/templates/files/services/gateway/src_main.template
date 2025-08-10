@@ -1,0 +1,51 @@
+import asyncio
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from nats.aio.client import Client as NATS
+from typing import Any
+from src.routes import router, active_connections
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("[api-server] 🔁 Lifespan starting...")
+    task = asyncio.create_task(run_subscriber())
+    try:
+        yield
+    finally:
+        print("[api-server] 🔻 Lifespan shutting down")
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            print("[api-server] 🚫 Subscriber cancelled cleanly")
+
+
+app = FastAPI(lifespan=lifespan)
+app.include_router(router=router)
+
+
+@app.get("/ping")
+async def ping():
+    return {"status": "CONNECTED"}
+
+
+async def run_subscriber():
+    nc: NATS = NATS()
+
+    async def message_handler(msg: Any):
+        subject = msg.subject
+        data = msg.data.decode()
+        print(f"[api-server] Received a message on '{subject}': {data}")
+
+        # Broadcast to WebSocket clients
+        for ws in active_connections:
+            try:
+                await ws.send_text(f"{subject}: {data}")
+            except Exception:
+                active_connections.remove(ws)
+
+    await nc.connect("nats://nats:4222")
+    await nc.subscribe("lichenevents", cb=message_handler)
+
+    print(f"[api-server] ✅ Subscribed to 'lichenevents'")
