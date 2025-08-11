@@ -1,0 +1,101 @@
+# Meta Data
+[[default]]
+version = "0.0.1"
+description = "Absolute MVP Lichen Stack file tree."
+
+
+# Global Scope
+[[default.nodes]]
+type = "file"
+path = ".lichen/registry.toml"
+template = "src/lichen_cli/scaffold/templates/files/.lichen_registry.template"
+
+[[default.nodes]]
+type = "file"
+path = ".gitignore"
+template = "src/lichen_cli/scaffold/templates/files/.gitignore.template"
+
+[[default.nodes]]
+type = "file"
+path = ".env.example"
+template = "src/lichen_cli/scaffold/templates/files/.env.example.template"
+
+[[default.nodes]]
+type = "file"
+path = "pyproject.toml"
+template = "src/lichen_cli/scaffold/templates/files/pyproject.template"
+
+[[default.nodes]]
+type = "file"
+path = "requirements.txt"
+template = "src/lichen_cli/scaffold/templates/files/requirements.template"
+
+[[default.nodes]]
+type = "file"
+path = "README.md"
+template = "src/lichen_cli/scaffold/templates/files/README.template"
+
+[[default.nodes]]
+type = "file"
+path = "global.config.toml"
+template = "src/lichen_cli/scaffold/templates/files/global.config.template"
+
+
+# Gateway Service
+[[default.nodes]]
+type = "file"
+path = "services/gateway/src/main.py"
+template = "src/lichen_cli/scaffold/templates/files/services/gateway/src_main.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/src/routes.py"
+template = "src/lichen_cli/scaffold/templates/files/services/gateway/src_routes.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/requirements.txt"
+template = "src/lichen_cli/scaffold/templates/files/services/gateway/requirements.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/local.config.toml"
+template = "src/lichen_cli/scaffold/templates/files/services/gateway/local.config.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/gateway/.env.example"
+template = "src/lichen_cli/scaffold/templates/files/services/gateway/.env.example.template"
+
+# Worker Service
+[[default.nodes]]
+type = "file"
+path = "services/worker/src/main.py"
+template = "src/lichen_cli/scaffold/templates/files/services/worker/src_main.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/requirements.txt"
+template = "src/lichen_cli/scaffold/templates/files/services/worker/requirements.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/local.config.toml"
+template = "src/lichen_cli/scaffold/templates/files/services/worker/local.config.template"
+
+[[default.nodes]]
+type = "file"
+path = "services/worker/.env.example"
+template = "src/lichen_cli/scaffold/templates/files/services/worker/.env.example.template"
+
+
+# Shared modules
+[[default.nodes]]
+type = "file"
+path = "shared/utils.py"
+template = "src/lichen_cli/scaffold/templates/files/shared/utils.template"
+
+[[default.nodes]]
+type = "file"
+path = "shared/logging.py"
+template = "src/lichen_cli/scaffold/templates/files/shared/logging.template"

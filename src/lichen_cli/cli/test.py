@@ -1,5 +1,5 @@
 from typer import Typer
-from lichen.utils.tests import run_tests
+from lichen_cli.utils.tests import run_tests
 
 app = Typer()
 

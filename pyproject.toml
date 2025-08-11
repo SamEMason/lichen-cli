@@ -1,5 +1,5 @@
 [project]
-name = "{{name}}"
+name = "Lichen"
 version = "0.0.1"
 description = "Lichen Stack Project"
 readme = "README.md"
@@ -8,3 +8,11 @@ dependencies = []
 [[project.authors]]
 name = ""
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.scripts]
+lichen = "lichen_cli.cli.main:app"

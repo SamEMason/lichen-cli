@@ -1,6 +1,6 @@
 # Global Lichen CLI Configuration
 [dev]
 mode = "dev"
-lichen_dir = "lichen"
+lichen_cli_dir = "src/lichen_cli"
 project_name = ""
 temp_dir = "dev"
