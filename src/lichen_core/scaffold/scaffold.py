@@ -1,5 +1,5 @@
 from pathlib import Path
-from lichen_cli.config import Config
+from lichen_core.config import Config
 from lichen_core.utils.io import (
     get_project_root,
     load_template,

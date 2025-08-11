@@ -15,4 +15,4 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [project.scripts]
-lichen = "lichen_cli.cli.main:app"
+lichen = "lichen_cli.main:app"

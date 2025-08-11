@@ -1,3 +1,3 @@
-from lichen_cli.cli.main import app
+from lichen_cli.main import app
 
 __all__ = ["app"]

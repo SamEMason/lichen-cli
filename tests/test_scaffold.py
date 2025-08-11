@@ -1,4 +1,4 @@
-from lichen_cli.config import Config
+from lichen_core.config import Config
 from lichen_core.scaffold import scaffold_project
 from lichen_core.utils.io import get_project_root
 

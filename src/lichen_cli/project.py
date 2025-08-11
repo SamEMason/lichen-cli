@@ -1,7 +1,7 @@
 from pathlib import Path
 from shutil import rmtree
 from typer import Typer
-from lichen_cli.config import Config
+from lichen_core.config import Config
 from lichen_core.scaffold import scaffold_project
 
 
