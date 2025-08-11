@@ -1,5 +1,5 @@
 from pathlib import Path
-from lichen_core.utils.io import (
+from core.utils.io import (
     get_path,
     get_project_root,
     load_toml,

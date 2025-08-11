@@ -1,6 +1,6 @@
-from lichen_core.config import Config
-from lichen_core.scaffold import scaffold_project
-from lichen_core.utils.io import get_project_root
+from core.config import Config
+from core.scaffold import scaffold_project
+from core.utils.io import get_project_root
 
 
 config = Config()

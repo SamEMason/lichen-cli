@@ -1,8 +1,8 @@
 from pathlib import Path
 from shutil import rmtree
 from typer import Typer
-from lichen_core.config import Config
-from lichen_core.scaffold import scaffold_project
+from core.config import Config
+from core.scaffold import scaffold_project
 
 
 app = Typer()
