@@ -1,15 +1,18 @@
-from lichen_cli.utils.io import get_project_root, load_toml, write_toml
+from lichen_core.utils.io import get_project_root, load_toml, write_toml
 
 
 class Config:
     def __init__(
         self,
         lichen_cli_dir: str = "src/lichen_cli",
+        lichen_core_dir: str = "src/lichen_core",
         mode: str = "dev",
         temp_dir: str = "dev",
     ):
         self.mode = mode
         self.lichen_cli_dir = lichen_cli_dir
+        self.lichen_core_dir: str = lichen_core_dir
+
         self.project_name: str | None = None
         self.temp_dir = temp_dir
 

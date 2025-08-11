@@ -1,6 +1,6 @@
 from pathlib import Path
 from lichen_cli.config import Config
-from lichen_cli.utils.io import (
+from lichen_core.utils.io import (
     get_project_root,
     load_template,
     load_toml,
@@ -30,7 +30,9 @@ def scaffold_project(name: str):
         target_directory = cwd / name
 
     # Load file tree nodes from scaffold.toml
-    scaffold_file_path = toml_file_base / config.lichen_cli_dir / "scaffold/scaffold.toml"
+    scaffold_file_path = (
+        toml_file_base / config.lichen_core_dir / "scaffold/scaffold.toml"
+    )
     scaffolding = load_toml(scaffold_file_path)
 
     print(scaffold_file_path.resolve())
@@ -72,4 +74,3 @@ def apply_nodes(nodes: list[dict[str, str]], location: Path):
 
             else:
                 make_file(target)
-                
