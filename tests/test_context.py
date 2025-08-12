@@ -88,7 +88,7 @@ def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: P
     context = Context()
 
     # Save the value: "test_project" to the project_name property
-    context.save("project_name", expected_value)
+    context.save_config("project_name", expected_value)
 
     # Assert config.project_name is equal to saved value
     assert context.config.project_name == expected_value
@@ -104,7 +104,7 @@ def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Pa
     context = Context()
 
     # Save the value: "test_project" to the project_name property
-    context.save("project_name", expected_value)
+    context.save_config("project_name", expected_value)
 
     path = tmp_path / CONFIG_FILENAME
 
@@ -125,10 +125,10 @@ def test_save_method_raises_keyerror_with_malformed_keys(
     # Instantiate context object
     context = Context()
 
-    # Assert config.save() raises KeyError with malformed key
+    # Assert config.save_config() raises KeyError with malformed key
     with pytest.raises(KeyError):
         # Attempt to save the malformed key with the value
-        context.save(malformed_key, value)
+        context.save_config(malformed_key, value)
 
 
 def test_save_method_creates_config_file_if_none_exist(
@@ -147,9 +147,9 @@ def test_save_method_creates_config_file_if_none_exist(
     assert not path.exists()
 
     # Save the value: "test_project" to the project_name property
-    context.save("project_name", expected_value)
+    context.save_config("project_name", expected_value)
 
-    # Assert that config.save() created config.toml
+    # Assert that config.save_config() created config.toml
     assert path.exists()
 
 

@@ -44,7 +44,7 @@ class Context:
             # Otherwise store data in memory
             self.config[k] = None if v == "" else v
 
-    def save(self, key: str, value: str):
+    def save_config(self, key: str, value: str):
         """Validate and persist config property changes to config.toml."""
         # Validate key is allowed
         if not key in ALLOWED_KEYS:
