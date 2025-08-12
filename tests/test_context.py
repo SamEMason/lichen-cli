@@ -1,7 +1,11 @@
+import pytest
 from pathlib import Path
+from pytest import MonkeyPatch
+from typing import Any
 
-from core.config import Config
+from core.config import Config, CONFIG_FILENAME, DEFAULT_CONFIGS
 from core.context import Context
+from core.utils.io import write_toml
 
 
 def test_context_instantiates_as_context():
@@ -18,6 +22,60 @@ def test_context_includes_config_instance():
 
     # Assert the config field is of type Config
     assert isinstance(ctx.config, Config)
+
+
+def test_load_method_loads_data_from_config_file(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    default_value = None
+    loaded_value = "test_project"
+
+    # Create config.toml at root with test property value
+    write_toml(tmp_path / CONFIG_FILENAME, {"dev": {"project_name": loaded_value}})
+
+    # Assert default project_name value in memory before load
+    context = Context()
+    assert context.config["project_name"] == default_value
+
+    # Assert loaded project_name value in memory after load
+    context.load()
+    assert context.config["project_name"] == loaded_value
+
+
+def test_load_method_keeps_default_values_when_config_file_is_empty(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    # Create empty config.toml at root
+    write_toml(tmp_path / CONFIG_FILENAME, {})
+
+    # Assert default config properties remain after load
+    context = Context()
+    context.load()
+
+    for k, v in DEFAULT_CONFIGS.items():
+        assert context.config[k] == v
+
+
+def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    bad_property: dict[str, Any | None] = {"dev": {"bad_key": "test_project"}}
+
+    # Create config.toml at root with test property value
+    write_toml(tmp_path / CONFIG_FILENAME, bad_property)
+
+    # Assert load method raises KeyError
+    with pytest.raises(KeyError):
+        Context().load()
 
 
 def test_config_file_property_returns_valid_path():

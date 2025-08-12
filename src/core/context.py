@@ -2,8 +2,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-from core.config import Config, CONFIG_FILENAME
+from core.config import Config, ALLOWED_KEYS, CONFIG_FILENAME
 from core.utils.discovery import find_project_root
+from core.utils.io import load_toml
 
 
 @dataclass
@@ -19,6 +20,29 @@ class Context:
     def _root(self) -> Path:
         assert self.project_root is not None
         return self.project_root
+
+    # Config lifecycle methods
+    def load(self):
+        # Get project root directory to write config
+        project_root = find_project_root()
+        config_location = project_root / CONFIG_FILENAME
+
+        if not config_location.exists():
+            return
+
+        # Load properties from config.toml
+        data = load_toml(config_location)
+
+        section = data.get("dev", {})
+
+        # Iterate through file data and store loaded properties in memory
+        for k, v in section.items():
+            # If key isn't allowed, raise KeyError
+            if k not in ALLOWED_KEYS:
+                raise KeyError(f"Unknown key: {k}.")
+
+            # Otherwise store data in memory
+            self.config[k] = None if v == "" else v
 
     # Canonical paths (callers should use these)
     @property

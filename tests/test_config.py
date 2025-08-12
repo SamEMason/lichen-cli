@@ -3,7 +3,6 @@ from pathlib import Path
 from pytest import MonkeyPatch
 
 from core.config import Config, CONFIG_FILENAME, DEFAULT_CONFIGS
-from core.utils.io import write_toml
 
 
 def test_config_instantiates_with_defaults():
@@ -34,60 +33,6 @@ def test_config_instantiates_with_passed_in_values():
     # Assertions for expected config properties
     for key, value in expected_values.items():
         assert config[key] == value
-
-
-def test_load_method_loads_data_from_config_file(
-    monkeypatch: MonkeyPatch, tmp_path: Path
-):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
-
-    default_value = None
-    loaded_value = "test_project"
-
-    # Create config.toml at root with test property value
-    write_toml(tmp_path / CONFIG_FILENAME, {"project_name": loaded_value})
-
-    # Assert default project_name value in memory before load
-    config = Config()
-    assert config["project_name"] == default_value
-
-    # Assert loaded project_name value in memory after load
-    config.load()
-    assert config["project_name"] == loaded_value
-
-
-def test_load_method_keeps_default_values_when_config_file_is_empty(
-    monkeypatch: MonkeyPatch, tmp_path: Path
-):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
-
-    # Create empty config.toml at root
-    write_toml(tmp_path / CONFIG_FILENAME, {})
-
-    # Assert default config properties remain after load
-    config = Config()
-    config.load()
-
-    for k, v in DEFAULT_CONFIGS.items():
-        assert config[k] == v
-
-
-def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
-    monkeypatch: MonkeyPatch, tmp_path: Path
-):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
-
-    bad_property: dict[str, str | None] = {"bad_key": "test_project"}
-
-    # Create config.toml at root with test property value
-    write_toml(tmp_path / CONFIG_FILENAME, bad_property)
-
-    # Assert load method raises KeyError
-    with pytest.raises(KeyError):
-        Config().load()
 
 
 def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):

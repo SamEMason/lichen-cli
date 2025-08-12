@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
-from core.utils.io import find_project_root, load_toml, write_toml
+from core.utils.discovery import find_project_root
+from core.utils.io import load_toml, write_toml
 
 
 CONFIG_FILENAME: str = "config.toml"
@@ -20,23 +21,6 @@ class Config:
     core_dir: str = "src/core"
     tmp_dir: str = "dev"
     project_name: str | None = None
-
-    def load(self):
-        # Get project root directory to write config
-        project_root = find_project_root()
-        config_location = project_root / CONFIG_FILENAME
-
-        # Load properties from config.toml
-        data = load_toml(config_location)
-
-        # Iterate through file data and store loaded properties in memory
-        for k, v in data.items():
-            # If key isn't allowed, raise KeyError
-            if k not in ALLOWED_KEYS:
-                raise KeyError(f"Unknown key: {k}.")
-
-            # Otherwise store data in memory
-            self[k] = v
 
     def save(self, key: str, value: str):
         """Validate and persist config property changes to config.toml."""
