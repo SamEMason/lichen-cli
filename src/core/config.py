@@ -13,13 +13,8 @@ class Config:
     tmp_dir: str = "dev"
     project_name: str | None = None
 
-    def __getitem__(self, key: str):
-        return getattr(self, key)
-    
-    def __contains__(self, key: str):
-        return hasattr(self, key)
-
     def save(self, key: str, value: str):
+        """Validate and persist config property changes to config.toml."""
         # Validate key is allowed
         if not key in ALLOWED_KEYS:
             raise KeyError(f"Unknown key: {key}.")
@@ -44,3 +39,9 @@ class Config:
 
         # Overwrite config.toml with updated configs
         write_toml(config_location, content=configs)
+
+    def __getitem__(self, key: str):
+        return getattr(self, key)
+
+    def __contains__(self, key: str):
+        return hasattr(self, key)
