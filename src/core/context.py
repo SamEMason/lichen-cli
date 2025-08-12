@@ -32,5 +32,10 @@ class Context:
     @property
     def templates_dir(self):
         return self.scaffold_dir / "templates"
-    
-    
+
+    def get_absolute(self, filepath: str | Path) -> Path:
+        """Return absolute path under the project root."""
+        path = Path(filepath).expanduser()
+        if path.is_absolute():
+            return path.resolve()
+        return (self._root() / filepath).resolve()

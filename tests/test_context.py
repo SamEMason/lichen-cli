@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from core.config import Config
 from core.context import Context
 
@@ -74,3 +76,31 @@ def test_templates_dir_returns_correct_directory():
 
     # Assert templates_dir exists
     assert path == ctx.scaffold_dir / "templates"
+
+
+def test_get_absolute_returns_valid_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Prepare path
+    filepath = Path("tests/test_utils.py")
+
+    # Return path from scaffold_dir
+    path = ctx.get_absolute(filepath)
+
+    # Assert returned value is of type Path
+    assert isinstance(path, Path)
+
+
+def test_get_absolute_returns_correct_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Prepare path
+    filepath = Path("tests/test_utils.py")
+
+    # Return path from scaffold_dir
+    path = ctx.get_absolute(filepath)
+
+    # Assert file exists in returned path
+    assert path.exists(), f"Expected {path} to exist"

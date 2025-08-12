@@ -5,11 +5,6 @@ from typing import Any
 from core.utils.discovery import find_project_root
 
 
-def get_path(filepath: str | Path) -> Path:
-    root = find_project_root()
-    return root / filepath
-
-
 def make_dir(path: str | Path):
     p = Path(path)
 

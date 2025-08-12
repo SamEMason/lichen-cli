@@ -1,7 +1,6 @@
 from pathlib import Path
 from core.utils.discovery import find_project_root
 from core.utils.io import (
-    get_path,
     load_toml,
     make_dir,
     make_file,
@@ -20,20 +19,6 @@ def test_find_project_root():
 
     # Determine if pyproject.toml is in the returned root path
     assert (project_root / root_file).exists()
-
-
-def test_get_path():
-    # Prepare path
-    filepath = Path("tests/test_utils.py")
-
-    # Get path using get_path
-    result = get_path(filepath)
-
-    # Assert returned value is of type Path
-    assert isinstance(result, Path)
-
-    # Assert file exists in returned path
-    assert result.exists(), f"Expected {result} to exist"
 
 
 def test_make_dir(tmp_path: Path):
