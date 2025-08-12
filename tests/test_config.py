@@ -163,3 +163,25 @@ def test_save_method_creates_config_file_if_none_exist(
 
     # Assert that config.save() created config.toml
     assert path.exists()
+
+
+def test_to_dict_method_returns_dict_type():
+    # Instantiate config object
+    config = Config()
+
+    # Assert to_dict method returns a dict
+    assert isinstance(config.to_dict(), dict)
+
+
+def test_dict_method_returns_in_memory_config_data_as_dict():
+    # Expect the default config values to be returned
+    expected_values = DEFAULT_CONFIGS
+
+    # Instantiate config object
+    config = Config()
+
+    # Call to_dict and store returned dict
+    returned_values = config.to_dict()
+
+    # Assert the returned dict contains default config values
+    assert returned_values == expected_values

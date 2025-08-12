@@ -5,7 +5,7 @@ from core.utils.io import get_project_root, load_toml, write_toml
 
 
 CONFIG_FILENAME: str = "config.toml"
-ALLOWED_KEYS: set[str] = {"cli_dir", "core_dir", "tmp_dir", "project_name"}
+ALLOWED_KEYS: tuple[str, ...] = ("cli_dir", "core_dir", "tmp_dir", "project_name")
 DEFAULT_CONFIGS: dict[str, str | None] = {
     "cli_dir": "src/cli",
     "core_dir": "src/core",
@@ -64,6 +64,9 @@ class Config:
 
         # Overwrite config.toml with updated configs
         write_toml(config_location, content=configs)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {k: self[k] for k in ALLOWED_KEYS}
 
     def __getitem__(self, key: str):
         return getattr(self, key)
