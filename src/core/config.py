@@ -1,9 +1,17 @@
 from dataclasses import dataclass
+from typing import Any
 
 from core.utils.io import get_project_root, load_toml, write_toml
 
-CONFIG_FILENAME = "config.toml"
-ALLOWED_KEYS = {"cli_dir", "core_dir", "tmp_dir", "project_name"}
+
+CONFIG_FILENAME: str = "config.toml"
+ALLOWED_KEYS: set[str] = {"cli_dir", "core_dir", "tmp_dir", "project_name"}
+DEFAULT_CONFIGS: dict[str, str | None] = {
+    "cli_dir": "src/cli",
+    "core_dir": "src/core",
+    "tmp_dir": "dev",
+    "project_name": None,
+}
 
 
 @dataclass
@@ -12,6 +20,23 @@ class Config:
     core_dir: str = "src/core"
     tmp_dir: str = "dev"
     project_name: str | None = None
+
+    def load(self):
+        # Get project root directory to write config
+        project_root = get_project_root()
+        config_location = project_root / CONFIG_FILENAME
+
+        # Load properties from config.toml
+        data = load_toml(config_location)
+
+        # Iterate through file data and store loaded properties in memory
+        for k, v in data.items():
+            # If key isn't allowed, raise KeyError
+            if k not in ALLOWED_KEYS:
+                raise KeyError(f"Unknown key: {k}.")
+
+            # Otherwise store data in memory
+            self[k] = v
 
     def save(self, key: str, value: str):
         """Validate and persist config property changes to config.toml."""
@@ -42,6 +67,9 @@ class Config:
 
     def __getitem__(self, key: str):
         return getattr(self, key)
+
+    def __setitem__(self, key: str, value: Any):
+        return setattr(self, key, value)
 
     def __contains__(self, key: str):
         return hasattr(self, key)

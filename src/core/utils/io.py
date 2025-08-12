@@ -45,10 +45,12 @@ def make_file(path: str | Path, content: str = "", overwrite: bool = False):
 
 def load_toml(filepath: str | Path) -> dict[str, Any]:
     path = Path(filepath)
-    return toml.load(path) if path.exists() else {}
+    if not path.exists():
+        raise FileNotFoundError(f"Config file not found {path}")
+    return toml.load(path)
 
 
-def write_toml(filepath: str | Path, content: dict[str, str]):
+def write_toml(filepath: str | Path, content: dict[str, str | None]):
     path = Path(filepath)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as file:
