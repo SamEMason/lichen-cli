@@ -6,6 +6,7 @@ from core.utils.io import (
     make_file,
     write_toml,
 )
+from core.utils.tests import get_test_data
 
 
 def test_find_project_root():
@@ -48,7 +49,7 @@ def test_load_toml():
     expected_contents = {"test": {"value": 1}}
 
     # Load load_toml.toml
-    filepath = get_path("tests/test_data/load_toml.toml")
+    filepath = get_test_data("load_toml.toml")
     file_contents = load_toml(filepath=filepath)
 
     # Assert that the file exists before loading
