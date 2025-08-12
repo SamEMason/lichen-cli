@@ -1,6 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any
 
 from core.utils.io import get_project_root, load_toml, write_toml
 
@@ -18,24 +16,28 @@ class Config:
     def get(self, key: str, default: str = ""):
         return getattr(self, key, default)
 
-    def save(self, config_key: str, value: str):
+    def save(self, key: str, value: str):
+        # Validate key is allowed
+        if not key in ALLOWED_KEYS:
+            raise KeyError(f"Unknown key: {key}.")
+
         # Set config key with inputted value
-        setattr(self, config_key, value)
+        setattr(self, key, value)
 
         # Get project root directory to write config
         project_root = get_project_root()
-        config_location = project_root / "config.toml"
+        config_location = project_root / CONFIG_FILENAME
 
-        # Persist config update in config.toml
-        configs = load_toml(config_location)
-        print(configs)
+        # If config.toml doesn't exist, create empty dictionary
+        if not config_location.exists():
+            configs = {}
+        else:
+            # Else persist config update in config.toml
+            configs = load_toml(config_location)
 
         # Add updated configs to dictionary
         section = configs.setdefault(self.tmp_dir, {})
-        print(section)
-
-        section[config_key] = value
-        print(section)
+        section[key] = value
 
         # Overwrite config.toml with updated configs
         write_toml(config_location, content=configs)
