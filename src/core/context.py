@@ -7,6 +7,9 @@ from core.utils.discovery import find_project_root
 from core.utils.io import load_toml, write_toml
 
 
+ENV_SECTION = "dev"
+
+
 @dataclass
 class Context:
     config: Config = field(default_factory=Config)
@@ -24,8 +27,7 @@ class Context:
     # Config lifecycle methods
     def load_config(self):
         # Get project root directory to write config
-        project_root = find_project_root()
-        config_location = project_root / CONFIG_FILENAME
+        config_location = self._root() / CONFIG_FILENAME
 
         if not config_location.exists():
             return
@@ -33,7 +35,7 @@ class Context:
         # Load properties from config.toml
         data = load_toml(config_location)
 
-        section = data.get("dev", {})
+        section = data.get(ENV_SECTION, {})
 
         # Iterate through file data and store loaded properties in memory
         for k, v in section.items():
@@ -50,9 +52,6 @@ class Context:
         if not key in ALLOWED_KEYS:
             raise KeyError(f"Unknown key: {key}.")
 
-        # Set config key with inputted value
-        setattr(self, key, value)
-
         # Get project root directory to write config
         project_root = find_project_root()
         config_location = project_root / CONFIG_FILENAME
@@ -65,7 +64,7 @@ class Context:
             configs = load_toml(config_location)
 
         # Add updated configs to dictionary
-        section = configs.setdefault("dev", {})
+        section = configs.setdefault(ENV_SECTION, {})
         section[key] = value
         self.config[key] = value
 
