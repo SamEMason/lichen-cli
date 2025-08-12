@@ -2,8 +2,6 @@ import toml
 from pathlib import Path
 from typing import Any
 
-from core.utils.discovery import find_project_root
-
 
 def make_dir(path: str | Path):
     p = Path(path)
@@ -33,11 +31,11 @@ def make_file(path: str | Path, content: str = "", overwrite: bool = False):
 def load_toml(filepath: str | Path) -> dict[str, Any]:
     path = Path(filepath)
     if not path.exists():
-        raise FileNotFoundError(f"Config file not found {path}")
+        raise FileNotFoundError(f"File not found {path}")
     return toml.load(path)
 
 
-def write_toml(filepath: str | Path, content: dict[str, str | None]):
+def write_toml(filepath: str | Path, content: dict[str, Any]):
     path = Path(filepath)
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as file:
