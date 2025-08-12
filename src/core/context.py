@@ -4,7 +4,7 @@ from typing import Optional
 
 from core.config import Config, ALLOWED_KEYS, CONFIG_FILENAME
 from core.utils.discovery import find_project_root
-from core.utils.io import load_toml
+from core.utils.io import load_toml, write_toml
 
 
 @dataclass
@@ -43,6 +43,34 @@ class Context:
 
             # Otherwise store data in memory
             self.config[k] = None if v == "" else v
+
+    def save(self, key: str, value: str):
+        """Validate and persist config property changes to config.toml."""
+        # Validate key is allowed
+        if not key in ALLOWED_KEYS:
+            raise KeyError(f"Unknown key: {key}.")
+
+        # Set config key with inputted value
+        setattr(self, key, value)
+
+        # Get project root directory to write config
+        project_root = find_project_root()
+        config_location = project_root / CONFIG_FILENAME
+
+        # If config.toml doesn't exist, create empty dictionary
+        if not config_location.exists():
+            configs = {}
+        else:
+            # Else persist config update in config.toml
+            configs = load_toml(config_location)
+
+        # Add updated configs to dictionary
+        section = configs.setdefault("dev", {})
+        section[key] = value
+        self.config[key] = value
+
+        # Overwrite config.toml with updated configs
+        write_toml(config_location, content=configs)
 
     # Canonical paths (callers should use these)
     @property

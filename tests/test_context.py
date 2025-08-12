@@ -78,6 +78,81 @@ def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
         Context().load_config()
 
 
+def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    expected_value = "test_project"
+
+    # Instantiate context object
+    context = Context()
+
+    # Save the value: "test_project" to the project_name property
+    context.save("project_name", expected_value)
+
+    # Assert config.project_name is equal to saved value
+    assert context.config.project_name == expected_value
+
+
+def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Path):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    expected_value = "test_project"
+
+    # Instantiate context object
+    context = Context()
+
+    # Save the value: "test_project" to the project_name property
+    context.save("project_name", expected_value)
+
+    path = tmp_path / CONFIG_FILENAME
+
+    # Assertions for config.toml creation with expected value saved
+    assert path.exists()
+    assert expected_value in path.read_text()
+
+
+def test_save_method_raises_keyerror_with_malformed_keys(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    malformed_key = "poject_name"
+    value = "test_project"
+
+    # Instantiate context object
+    context = Context()
+
+    # Assert config.save() raises KeyError with malformed key
+    with pytest.raises(KeyError):
+        # Attempt to save the malformed key with the value
+        context.save(malformed_key, value)
+
+
+def test_save_method_creates_config_file_if_none_exist(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    expected_value = "test_project"
+    path = tmp_path / CONFIG_FILENAME
+
+    # Instantiate context object
+    context = Context()
+
+    # Assert that config.toml doesn't exist to start
+    assert not path.exists()
+
+    # Save the value: "test_project" to the project_name property
+    context.save("project_name", expected_value)
+
+    # Assert that config.save() created config.toml
+    assert path.exists()
+
+
 def test_config_file_property_returns_valid_path():
     # Instantiate Context object
     ctx = Context()
