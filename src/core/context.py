@@ -1,0 +1,33 @@
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Optional
+
+from core.config import Config, CONFIG_FILENAME
+from core.utils.io import get_project_root
+
+
+@dataclass
+class Context:
+    config: Config = field(default_factory=Config)
+    project_root: Optional[Path] = None
+
+    def __post_init__(self):
+        if self.project_root is None:
+            self.project_root = get_project_root()
+
+    # Internal guard
+    def _root(self) -> Path:
+        assert self.project_root is not None
+        return self.project_root
+
+    # Canonical paths (callers should use these)
+    @property
+    def config_file(self) -> Path:
+        return self._root() / CONFIG_FILENAME
+
+    @property
+    def scaffold_dir(self):
+        print(self._root() / "src" / "core" / "scaffold")
+        return self._root() / "src" / "core" / "scaffold"
+
+    
