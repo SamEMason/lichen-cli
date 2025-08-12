@@ -2,4 +2,4 @@
 cli_dir = "src/cli"
 core_dir = "src/core"
 tmp_dir = "dev"
-project_name = "test_project"
+project_name = ""
