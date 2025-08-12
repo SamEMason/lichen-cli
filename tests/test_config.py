@@ -17,7 +17,7 @@ def test_config_instantiates_with_defaults():
 
     # Assertions for expected config properties
     for key, value in expected_values.items():
-        assert config.get(key) == value
+        assert config[key] == value
 
 
 def test_config_instantiates_with_passed_in_values():
@@ -38,33 +38,7 @@ def test_config_instantiates_with_passed_in_values():
 
     # Assertions for expected config properties
     for key, value in expected_values.items():
-        assert config.get(key) == value
-
-
-def test_get_method_returns_expected_value():
-    expected_values: dict[str, str | None] = {
-        "cli_dir": "src/cli",
-        "core_dir": "src/core",
-        "tmp_dir": "dev",
-        "project_name": None,
-    }
-
-    # Instantiate config object with default properties
-    config = Config()
-
-    # Assertions for expected config properties to match Config.get() return values
-    for key, value in expected_values.items():
-        assert config.get(key) == value
-
-
-def test_get_method_with_invalid_key_returns_default():
-    expected_value: str = ""
-
-    # Instantiate config object with default properties
-    config = Config()
-
-    # Assertions for expected config properties to match Config.get() return values
-    assert config.get("NOT_A_KEY", "") == expected_value
+        assert config[key] == value
 
 
 def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):

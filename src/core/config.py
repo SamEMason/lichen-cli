@@ -13,8 +13,11 @@ class Config:
     tmp_dir: str = "dev"
     project_name: str | None = None
 
-    def get(self, key: str, default: str = ""):
-        return getattr(self, key, default)
+    def __getitem__(self, key: str):
+        return getattr(self, key)
+    
+    def __contains__(self, key: str):
+        return hasattr(self, key)
 
     def save(self, key: str, value: str):
         # Validate key is allowed
