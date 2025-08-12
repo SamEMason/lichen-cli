@@ -40,7 +40,7 @@ def test_load_method_loads_data_from_config_file(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     default_value = None
     loaded_value = "test_project"
@@ -61,7 +61,7 @@ def test_load_method_keeps_default_values_when_config_file_is_empty(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     # Create empty config.toml at root
     write_toml(tmp_path / CONFIG_FILENAME, {})
@@ -78,7 +78,7 @@ def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     bad_property: dict[str, str | None] = {"bad_key": "test_project"}
 
@@ -92,7 +92,7 @@ def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
 
 def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     expected_value = "test_project"
 
@@ -108,7 +108,7 @@ def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: P
 
 def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Path):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     expected_value = "test_project"
 
@@ -129,7 +129,7 @@ def test_save_method_raises_keyerror_with_malformed_keys(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     malformed_key = "poject_name"
     value = "test_project"
@@ -147,7 +147,7 @@ def test_save_method_creates_config_file_if_none_exist(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.config.get_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.config.find_project_root", lambda: tmp_path)
 
     expected_value = "test_project"
     path = tmp_path / CONFIG_FILENAME

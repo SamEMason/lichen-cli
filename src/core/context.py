@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from core.config import Config, CONFIG_FILENAME
-from core.utils.io import get_project_root
+from core.utils.discovery import find_project_root
 
 
 @dataclass
@@ -13,7 +13,7 @@ class Context:
 
     def __post_init__(self):
         if self.project_root is None:
-            self.project_root = get_project_root()
+            self.project_root = find_project_root()
 
     # Internal guard
     def _root(self) -> Path:

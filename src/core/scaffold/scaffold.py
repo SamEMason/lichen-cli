@@ -1,7 +1,7 @@
 from pathlib import Path
 from core.config import Config
+from core.utils.discovery import find_project_root
 from core.utils.io import (
-    get_project_root,
     load_template,
     load_toml,
     make_dir,
@@ -14,7 +14,7 @@ def scaffold_project(name: str):
     config = Config()
 
     # Project root directory
-    root_dir = get_project_root()
+    root_dir = find_project_root()
 
     # Current working directory
     cwd = Path.cwd()
@@ -44,7 +44,7 @@ def scaffold_project(name: str):
 
 def apply_nodes(nodes: list[dict[str, str]], location: Path):
     """Iteratively creates project structure at `location` using `nodes`"""
-    root_dir = get_project_root()
+    root_dir = find_project_root()
 
     # Iterate through file tree nodes and create scaffolding
     for node in nodes:

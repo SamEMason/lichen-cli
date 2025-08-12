@@ -2,19 +2,11 @@ import toml
 from pathlib import Path
 from typing import Any
 
-
-def get_project_root() -> Path:
-    start = Path(__file__).resolve()
-
-    for parent in start.parents:
-        if (parent / "pyproject.toml").exists():
-            return parent
-
-    raise RuntimeError("Project root not found")
+from core.utils.discovery import find_project_root
 
 
 def get_path(filepath: str | Path) -> Path:
-    root = get_project_root()
+    root = find_project_root()
     return root / filepath
 
 

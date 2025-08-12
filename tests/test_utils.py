@@ -1,7 +1,7 @@
 from pathlib import Path
+from core.utils.discovery import find_project_root
 from core.utils.io import (
     get_path,
-    get_project_root,
     load_toml,
     make_dir,
     make_file,
@@ -9,12 +9,12 @@ from core.utils.io import (
 )
 
 
-def test_get_project_root():
+def test_find_project_root():
     # File in root
     root_file = "pyproject.toml"
 
-    # Get project root using get_project_root
-    project_root = get_project_root()
+    # Get project root using find_project_root
+    project_root = find_project_root()
 
     assert isinstance(project_root, Path)
 
@@ -75,7 +75,7 @@ def test_load_toml():
 
 def test_write_toml(tmp_path: Path):
     # Expected file write key-value pair
-    file_content = {"test": "content"}
+    file_content: dict[str, str | None] = {"test": "content"}
 
     # Attempt to write to a test TOML file
     filepath = tmp_path / "write_toml.toml"

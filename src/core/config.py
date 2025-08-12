@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Any
 
-from core.utils.io import get_project_root, load_toml, write_toml
+from core.utils.io import find_project_root, load_toml, write_toml
 
 
 CONFIG_FILENAME: str = "config.toml"
@@ -23,7 +23,7 @@ class Config:
 
     def load(self):
         # Get project root directory to write config
-        project_root = get_project_root()
+        project_root = find_project_root()
         config_location = project_root / CONFIG_FILENAME
 
         # Load properties from config.toml
@@ -48,7 +48,7 @@ class Config:
         setattr(self, key, value)
 
         # Get project root directory to write config
-        project_root = get_project_root()
+        project_root = find_project_root()
         config_location = project_root / CONFIG_FILENAME
 
         # If config.toml doesn't exist, create empty dictionary

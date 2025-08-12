@@ -1,6 +1,6 @@
 from core.config import Config
 from core.scaffold import scaffold_project
-from core.utils.io import get_project_root
+from core.utils.discovery import find_project_root
 
 
 config = Config()
@@ -14,5 +14,5 @@ def test_scaffold_project_creates_project_dir():
     scaffold_project(test_dir)
 
     # Assert_project directory was created
-    filepath = get_project_root() / f"dev/{test_dir}"
+    filepath = find_project_root() / f"dev/{test_dir}"
     assert filepath.is_dir()
