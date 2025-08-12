@@ -25,19 +25,19 @@ def test_config_file_property_returns_valid_path():
     # Return path from config_file
     path = ctx.config_file
 
-    # Assert the config file exists
+    # Assert config_file exists
     assert path.exists()
 
 
-def test_scaffold_dir_property_returns_valid_path():
+def test_scaffold_dir_property_returns_valid_directory():
     # Instantiate Context object
     ctx = Context()
 
-    # Return path from config_file
+    # Return path from scaffold_dir
     path = ctx.scaffold_dir
 
-    # Assert the config file exists
-    assert path.exists()
+    # Assert scaffold_dir exists
+    assert path.is_dir()
 
 
 def test_scaffold_dir_property_returns_correct_path():
@@ -50,10 +50,27 @@ def test_scaffold_dir_property_returns_correct_path():
     # Assert project_root is loaded
     assert ctx.project_root is not None
 
-    # Assert the scaffold_dir exists
-    assert path.is_dir()
-
     # Assert path is correct
     assert path == ctx.project_root / "src" / "core" / "scaffold"
 
 
+def test_templates_dir_returns_valid_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.templates_dir
+
+    # Assert templates_dir exists
+    assert path.is_dir()
+
+
+def test_templates_dir_returns_correct_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.templates_dir
+
+    # Assert templates_dir exists
+    assert path == ctx.scaffold_dir / "templates"

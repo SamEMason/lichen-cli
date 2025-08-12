@@ -27,7 +27,10 @@ class Context:
 
     @property
     def scaffold_dir(self):
-        print(self._root() / "src" / "core" / "scaffold")
         return self._root() / "src" / "core" / "scaffold"
 
+    @property
+    def templates_dir(self):
+        return self.scaffold_dir / "templates"
+    
     
