@@ -22,7 +22,7 @@ class Context:
         return self.project_root
 
     # Config lifecycle methods
-    def load(self):
+    def load_config(self):
         # Get project root directory to write config
         project_root = find_project_root()
         config_location = project_root / CONFIG_FILENAME

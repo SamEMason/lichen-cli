@@ -24,7 +24,7 @@ def test_context_includes_config_instance():
     assert isinstance(ctx.config, Config)
 
 
-def test_load_method_loads_data_from_config_file(
+def test_load_config_method_loads_data_from_config_file(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
@@ -41,11 +41,11 @@ def test_load_method_loads_data_from_config_file(
     assert context.config["project_name"] == default_value
 
     # Assert loaded project_name value in memory after load
-    context.load()
+    context.load_config()
     assert context.config["project_name"] == loaded_value
 
 
-def test_load_method_keeps_default_values_when_config_file_is_empty(
+def test_load_config_method_keeps_default_values_when_config_file_is_empty(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
@@ -56,13 +56,13 @@ def test_load_method_keeps_default_values_when_config_file_is_empty(
 
     # Assert default config properties remain after load
     context = Context()
-    context.load()
+    context.load_config()
 
     for k, v in DEFAULT_CONFIGS.items():
         assert context.config[k] == v
 
 
-def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
+def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
@@ -75,7 +75,7 @@ def test_load_method_raises_keyerror_if_loaded_key_not_allowed(
 
     # Assert load method raises KeyError
     with pytest.raises(KeyError):
-        Context().load()
+        Context().load_config()
 
 
 def test_config_file_property_returns_valid_path():
