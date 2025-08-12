@@ -35,9 +35,14 @@ def load_toml(filepath: str | Path) -> dict[str, Any]:
     return toml.load(path)
 
 
-def write_toml(filepath: str | Path, content: dict[str, Any]):
+def write_toml(filepath: str | Path, content: dict[str, Any] | None):
     path = Path(filepath)
     path.parent.mkdir(parents=True, exist_ok=True)
+
+    # If content is None, pass in empty string instead
+    if content is None:
+        content = {}
+
     with open(path, "w", encoding="utf-8") as file:
         toml.dump(content, file)
 

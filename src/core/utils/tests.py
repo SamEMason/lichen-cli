@@ -1,6 +1,11 @@
 import subprocess
+from pathlib import Path
+from pytest import MonkeyPatch
+from typing import Any
 
+from core.config import CONFIG_FILENAME
 from core.utils.discovery import find_project_root
+from core.utils.io import write_toml
 
 
 def run_tests():
@@ -26,3 +31,16 @@ def get_test_data(filename: str):
 
     # Otherwise return the target path
     return target
+
+
+def make_test_config(
+    monkeypatch: MonkeyPatch, tmp_path: Path, data: dict[str, Any] | None = None
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    # Build path from tmp_path to config.toml
+    path = tmp_path / CONFIG_FILENAME
+
+    # Create config.toml file
+    write_toml(path, data)
