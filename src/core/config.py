@@ -1,23 +1,22 @@
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
+
 from core.utils.io import get_project_root, load_toml, write_toml
 
+CONFIG_FILENAME = "config.toml"
+ALLOWED_KEYS = {"cli_dir", "core_dir", "tmp_dir", "project_name"}
 
+
+@dataclass
 class Config:
-    def __init__(
-        self,
-        cli_dir: str = "src/cli",
-        core_dir: str = "src/core",
-        mode: str = "dev",
-        temp_dir: str = "dev",
-    ):
-        self.mode = mode
-        self.cli_dir = cli_dir
-        self.core_dir: str = core_dir
+    cli_dir: str = "src/cli"
+    core_dir: str = "src/core"
+    tmp_dir: str = "dev"
+    project_name: str | None = None
 
-        self.project_name: str | None = None
-        self.temp_dir = temp_dir
-
-    def get_cli_dir(self, filepath: str):
-        return f"{self.cli_dir}/{filepath}"
+    def get(self, key: str, default: str = ""):
+        return getattr(self, key, default)
 
     def save(self, config_key: str, value: str):
         # Set config key with inputted value
@@ -32,7 +31,7 @@ class Config:
         print(configs)
 
         # Add updated configs to dictionary
-        section = configs.setdefault(self.mode, {})
+        section = configs.setdefault(self.tmp_dir, {})
         print(section)
 
         section[config_key] = value

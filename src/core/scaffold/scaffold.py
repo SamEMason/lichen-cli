@@ -22,17 +22,15 @@ def scaffold_project(name: str):
     # Target directory  RENAME!!!!
     toml_file_base = root_dir
 
-    # Nest directory structure in temp/ in dev mode
-    if config.mode == "dev":
+    # Nest directory structure in tmp_dir
+    if config.tmp_dir == "dev":
         # Directory to create project structure
-        target_directory = cwd / config.temp_dir / name
+        target_directory = cwd / config.tmp_dir / name
     else:
         target_directory = cwd / name
 
     # Load file tree nodes from scaffold.toml
-    scaffold_file_path = (
-        toml_file_base / config.core_dir / "scaffold/scaffold.toml"
-    )
+    scaffold_file_path = toml_file_base / config.core_dir / "scaffold/scaffold.toml"
     scaffolding = load_toml(scaffold_file_path)
 
     print(scaffold_file_path.resolve())

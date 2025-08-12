@@ -18,7 +18,7 @@ def build():
 def destroy(name: str):
     """Destroy the specified lichen monorepo project"""
     config = Config()
-    path = Path(f"{config.temp_dir}/{name}")
+    path = Path(f"{config.tmp_dir}/{name}")
 
     if path.exists() and path.is_dir():
         rmtree(path)
@@ -31,13 +31,13 @@ def destroy(name: str):
 def decimate():
     """Destroy the temp/ directory"""
     config = Config()
-    temp_path = Path(config.temp_dir)
+    temp_path = Path(config.tmp_dir)
 
     if temp_path.exists() and temp_path.is_dir():
         rmtree(temp_path)
-        print(f"Directory '{config.temp_dir}' destroyed.")
+        print(f"Directory '{config.tmp_dir}' destroyed.")
     else:
-        print(f"Directory '{config.temp_dir}' does not exist.")
+        print(f"Directory '{config.tmp_dir}' does not exist.")
 
 
 @app.command()
