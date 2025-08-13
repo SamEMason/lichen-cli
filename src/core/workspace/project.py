@@ -39,21 +39,23 @@ class ProjectCapability(BaseCapability):
         else:
             return f"Directory '{tmp_dir}' does not exist."
 
-    def destroy(self, target: str):
+    def destroy(self, name: str):
         """Destroy the specified lichen monorepo project"""  # NOTE: REFACTOR -> WRAP RMTREE
         cwd = self.context.cwd
         root = self.context.project_root
 
         if cwd == root:
-            target = f"{self.context.config.tmp_dir}/{target}"
+            target = f"{self.context.config.tmp_dir}/{name}"
+        else:
+            target = name
 
         path = self.context.path_from_cmd(target)
 
         if path.exists() and path.is_dir():
             rmtree(path)
-            return f"Project '{target}' destroyed."
+            return f"Project '{name}' destroyed."
         else:
-            return f"Project '{target}' does not exist."
+            return f"Project '{name}' does not exist."
 
     def _create_project_directory(self, name: str) -> Path:
         # Root and current working directory
