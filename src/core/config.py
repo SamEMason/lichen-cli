@@ -3,10 +3,8 @@ from typing import Any
 
 
 CONFIG_FILENAME: str = "config.toml"
-ALLOWED_KEYS: tuple[str, ...] = ("cli_dir", "core_dir", "tmp_dir", "project_name")
+ALLOWED_KEYS: tuple[str, ...] = ("tmp_dir", "project_name")
 DEFAULT_CONFIGS: dict[str, str | None] = {
-    "cli_dir": "src/cli",
-    "core_dir": "src/core",
     "tmp_dir": "dev",
     "project_name": None,
 }
@@ -14,8 +12,6 @@ DEFAULT_CONFIGS: dict[str, str | None] = {
 
 @dataclass
 class Config:
-    cli_dir: str = "src/cli"
-    core_dir: str = "src/core"
     tmp_dir: str = "dev"
     project_name: str | None = None
 

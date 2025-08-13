@@ -12,16 +12,12 @@ def test_config_instantiates_with_defaults():
 
 def test_config_instantiates_with_passed_in_values():
     expected_values: dict[str, str] = {
-        "cli_dir": "cli",
-        "core_dir": "core",
         "tmp_dir": "tmp",
         "project_name": "test_project",
     }
 
     # Instantiate config object with custom property arguments
     config = Config(
-        cli_dir=expected_values["cli_dir"],
-        core_dir=expected_values["core_dir"],
         tmp_dir=expected_values["tmp_dir"],
         project_name=expected_values["project_name"],
     )
