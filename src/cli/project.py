@@ -8,7 +8,7 @@ app = Typer()
 def build():
     """Build the lichen app"""
     ws = Workspace()
-    output = ws.project_build()
+    output = ws.project.build()
     print(output)
 
 
@@ -16,7 +16,7 @@ def build():
 def destroy(name: str):
     """Destroy the specified lichen monorepo project"""
     ws = Workspace()
-    output = ws.project_destroy(name)
+    output = ws.project.destroy(name)
     print(output)
 
 
@@ -24,7 +24,7 @@ def destroy(name: str):
 def decimate():
     """Destroy the temp/ directory"""
     ws = Workspace()
-    output = ws.project_decimate()
+    output = ws.project.decimate()
     print(output)
 
 
@@ -32,4 +32,4 @@ def decimate():
 def new(name: str):
     """Create new lichen stack monorepo project"""
     ws = Workspace()
-    ws.project_new(name)
+    ws.project.new(name)
