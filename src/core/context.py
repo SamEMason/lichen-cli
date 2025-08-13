@@ -99,8 +99,11 @@ class Context:
         return None
 
     @property
-    def cwd(self):
+    def cwd(self) -> Path:
         return Path.cwd()
+
+    def path_from_cmd(self, filepath: str | Path) -> Path:
+        return self.cwd / filepath
 
     def get_absolute(self, filepath: str | Path) -> Path:
         """Return absolute path under the project root."""

@@ -33,11 +33,18 @@ def get_test_data(filename: str):
     return target
 
 
+def patch_root_with_tmp_path(
+    monkeypatch: MonkeyPatch, tmp_path: Path, module: str = "context"
+):
+    """Patches find_project_root() with tmp_path fixture"""
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr(f"core.{module}.find_project_root", lambda: tmp_path)
+
+
 def make_test_config(
     monkeypatch: MonkeyPatch, tmp_path: Path, data: dict[str, Any] | None = None
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     # Build path from tmp_path to config.toml
     path = tmp_path / CONFIG_FILENAME

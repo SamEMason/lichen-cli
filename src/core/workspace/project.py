@@ -16,11 +16,8 @@ class ProjectCapability(BaseCapability):
         # Create root directory for project
         target = self._create_project_directory(name)
 
-        # Resolve filepath for scaffold.toml
-        scaffold_file_path = self.context.scaffold_dir / "scaffold.toml"
-
         # Load scaffolding nodes from scaffold.toml
-        scaffolding = load_toml(scaffold_file_path)
+        scaffolding = load_toml(self.context.scaffold_file)
 
         # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
         nodes = scaffolding["default"][0]["nodes"]
@@ -42,15 +39,21 @@ class ProjectCapability(BaseCapability):
         else:
             return f"Directory '{tmp_dir}' does not exist."
 
-    def destroy(self, name: str):
-        """Destroy the specified lichen monorepo project"""
-        path = Path(name)
+    def destroy(self, target: str):
+        """Destroy the specified lichen monorepo project"""  # NOTE: REFACTOR -> WRAP RMTREE
+        cwd = self.context.cwd
+        root = self.context.project_root
+
+        if cwd == root:
+            target = f"{self.context.config.tmp_dir}/{target}"
+
+        path = self.context.path_from_cmd(target)
 
         if path.exists() and path.is_dir():
             rmtree(path)
-            return f"Project '{name}' destroyed."
+            return f"Project '{target}' destroyed."
         else:
-            return f"Project '{name}' does not exist."
+            return f"Project '{target}' does not exist."
 
     def _create_project_directory(self, name: str) -> Path:
         # Root and current working directory

@@ -6,6 +6,7 @@ from typing import Any
 from core.config import Config, CONFIG_FILENAME, DEFAULT_CONFIGS
 from core.context import Context
 from core.utils.io import make_dir, write_toml
+from core.utils.tests import patch_root_with_tmp_path
 
 
 def test_context_instantiates_as_context():
@@ -27,8 +28,7 @@ def test_context_includes_config_instance():
 def test_load_config_method_loads_data_from_config_file(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     default_value = None
     loaded_value = "test_project"
@@ -48,8 +48,7 @@ def test_load_config_method_loads_data_from_config_file(
 def test_load_config_method_keeps_default_values_when_config_file_is_empty(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     # Create empty config.toml at root
     write_toml(tmp_path / CONFIG_FILENAME, {})
@@ -65,8 +64,7 @@ def test_load_config_method_keeps_default_values_when_config_file_is_empty(
 def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     bad_property: dict[str, Any | None] = {"dev": {"bad_key": "test_project"}}
 
@@ -79,8 +77,7 @@ def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
 
 
 def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     expected_value = "test_project"
 
@@ -95,8 +92,7 @@ def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: P
 
 
 def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Path):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     expected_value = "test_project"
 
@@ -116,8 +112,7 @@ def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Pa
 def test_save_method_raises_keyerror_with_malformed_keys(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     malformed_key = "poject_name"
     value = "test_project"
@@ -134,8 +129,7 @@ def test_save_method_raises_keyerror_with_malformed_keys(
 def test_save_method_creates_config_file_if_none_exist(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     expected_value = "test_project"
     path = tmp_path / CONFIG_FILENAME
@@ -278,8 +272,7 @@ def test_temporary_directory_returns_valid_path():
 def test_temporary_directory_returns_correct_path_if_exists(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     # Instantiate Context object
     ctx = Context()
@@ -289,7 +282,7 @@ def test_temporary_directory_returns_correct_path_if_exists(
 
     # Return path from scaffold_dir
     path = ctx.temporary_dir
-    
+
     # Assert returned path is not None
     assert path is not None
 
@@ -300,8 +293,7 @@ def test_temporary_directory_returns_correct_path_if_exists(
 def test_temporary_directory_returns_None_if_it_does_not_exist(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     # Instantiate Context object
     ctx = Context()
@@ -311,3 +303,24 @@ def test_temporary_directory_returns_None_if_it_does_not_exist(
 
     # Assert returned path is None
     assert path == None
+
+
+def test_path_from_cwd_returns_valid_path(monkeypatch: MonkeyPatch, tmp_path: Path):
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
+
+    # Instantiate Context object
+    ctx = Context()
+
+    parent_test_path = Path("parent")
+    child_test_path = parent_test_path / "child"
+    (tmp_path / parent_test_path / child_test_path).mkdir(parents=True)
+
+    monkeypatch.chdir(tmp_path / parent_test_path)
+
+    assert ctx.cwd == tmp_path / parent_test_path
+
+    # Return path from path_from_cwd
+    path = ctx.path_from_cmd(child_test_path)
+
+    # Assert returned path is None
+    assert path == Path(tmp_path / parent_test_path / child_test_path)

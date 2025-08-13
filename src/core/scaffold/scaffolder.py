@@ -21,9 +21,7 @@ class Scaffolder:
 
                 # If file is of type TOML, load template contents and use write_toml
                 if is_toml and has_template:
-                    content = load_template(
-                        root_dir / node["template"]
-                    )
+                    content = load_template(root_dir / node["template"])
                     if not content:
                         content = ""
                     make_file(target, content=content)
