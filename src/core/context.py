@@ -81,6 +81,10 @@ class Context:
         return self._root() / "src" / "core" / "scaffold"
 
     @property
+    def scaffold_file(self):
+        return self.scaffold_dir / "scaffold.toml"
+
+    @property
     def templates_dir(self):
         return self.scaffold_dir / "templates"
 

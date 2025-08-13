@@ -153,7 +153,7 @@ def test_save_method_creates_config_file_if_none_exist(
     assert path.exists()
 
 
-def test_config_file_property_returns_valid_path():
+def test_config_file_returns_valid_path():
     # Instantiate Context object
     ctx = Context()
 
@@ -164,7 +164,7 @@ def test_config_file_property_returns_valid_path():
     assert path.exists()
 
 
-def test_scaffold_dir_property_returns_valid_directory():
+def test_scaffold_dir_returns_valid_directory():
     # Instantiate Context object
     ctx = Context()
 
@@ -175,7 +175,7 @@ def test_scaffold_dir_property_returns_valid_directory():
     assert path.is_dir()
 
 
-def test_scaffold_dir_property_returns_correct_path():
+def test_scaffold_dir_returns_correct_path():
     # Instantiate Context object
     ctx = Context()
 
@@ -187,6 +187,31 @@ def test_scaffold_dir_property_returns_correct_path():
 
     # Assert path is correct
     assert path == ctx.project_root / "src" / "core" / "scaffold"
+
+
+def test_scaffold_file_returns_valid_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from scaffold_file
+    path = ctx.scaffold_file
+
+    # Assert project_root is loaded
+    assert path.exists()
+
+
+def test_scaffold_file_returns_correct_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from scaffold_dir
+    path = ctx.scaffold_file
+
+    # Assert project_root is loaded
+    assert ctx.project_root is not None
+
+    # Assert path is correct
+    assert path == ctx.scaffold_dir / "scaffold.toml"
 
 
 def test_templates_dir_returns_valid_directory():
