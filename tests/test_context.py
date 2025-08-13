@@ -5,7 +5,7 @@ from typing import Any
 
 from core.config import Config, CONFIG_FILENAME, DEFAULT_CONFIGS
 from core.context import Context
-from core.utils.io import write_toml
+from core.utils.io import make_dir, write_toml
 
 
 def test_context_instantiates_as_context():
@@ -262,3 +262,52 @@ def test_get_absolute_returns_correct_path():
 
     # Assert file exists in returned path
     assert path.exists(), f"Expected {path} to exist"
+
+
+def test_temporary_directory_returns_valid_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from scaffold_dir
+    path = ctx.temporary_dir
+
+    # Assert returned value is of type Path
+    assert isinstance(path, Path | None)
+
+
+def test_temporary_directory_returns_correct_path_if_exists(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    # Instantiate Context object
+    ctx = Context()
+
+    # Create temporary directory
+    make_dir(tmp_path / ctx.config.tmp_dir)
+
+    # Return path from scaffold_dir
+    path = ctx.temporary_dir
+    
+    # Assert returned path is not None
+    assert path is not None
+
+    # Assert file exists in returned path
+    assert path.exists(), f"Expected {path} to exist"
+
+
+def test_temporary_directory_returns_None_if_it_does_not_exist(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from scaffold_dir
+    path = ctx.temporary_dir
+
+    # Assert returned path is None
+    assert path == None

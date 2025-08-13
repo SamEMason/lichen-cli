@@ -89,6 +89,16 @@ class Context:
         return self.scaffold_dir / "templates"
 
     @property
+    def temporary_dir(self) -> Path | None:
+        if self.project_root is not None:
+            path = Path(self.project_root / self.config.tmp_dir)
+
+            if path.exists():
+                return self.get_absolute(path)
+
+        return None
+
+    @property
     def cwd(self):
         return Path.cwd()
 

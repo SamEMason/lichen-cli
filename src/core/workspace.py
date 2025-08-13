@@ -38,17 +38,18 @@ class Workspace:
 
     def project_decimate(self) -> str:
         """Absolutely decimate the tmp_dir/ directory"""
-        temp_path = Path(self.context.config.tmp_dir)
+        temp_path = self.context.temporary_dir
+        tmp_dir = self.context.config.tmp_dir
 
-        if temp_path.exists() and temp_path.is_dir():
+        if temp_path and temp_path.exists() and temp_path.is_dir():
             rmtree(temp_path)
-            return f"Directory '{temp_path}' destroyed."
+            return f"Directory '{tmp_dir}' destroyed."
         else:
-            return f"Directory '{temp_path}' does not exist."
+            return f"Directory '{tmp_dir}' does not exist."
 
     def project_destroy(self, name: str):
         """Destroy the specified lichen monorepo project"""
-        path = Path(f"{self.context.config.tmp_dir}/{name}")
+        path = Path(name)
 
         if path.exists() and path.is_dir():
             rmtree(path)
