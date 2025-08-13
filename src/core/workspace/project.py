@@ -1,23 +1,18 @@
 from pathlib import Path
 from shutil import rmtree
 
-from core.context import Context
 from core.scaffold import Scaffolder
 from core.utils.io import load_toml
+from core.workspace.base import BaseCapability
 
 
-class Workspace:
-    def __init__(self, context: Context | None = None, autoload: bool = True):
-        self.context = context or Context()
-        self.scaffolder = Scaffolder()
+class ProjectCapability(BaseCapability):
+    scaffolder = Scaffolder()
 
-        if autoload:
-            self.context.load_config()
-
-    def project_build(self) -> str:
+    def build(self) -> str:
         return "build process under construction..."
 
-    def project_new(self, name: str):
+    def new(self, name: str):
         # Create root directory for project
         target = self._create_project_directory(name)
 
@@ -36,7 +31,7 @@ class Workspace:
                 nodes=nodes, location=target, root_dir=self.context.project_root
             )
 
-    def project_decimate(self) -> str:
+    def decimate(self) -> str:
         """Absolutely decimate the tmp_dir/ directory"""
         temp_path = self.context.temporary_dir
         tmp_dir = self.context.config.tmp_dir
@@ -47,7 +42,7 @@ class Workspace:
         else:
             return f"Directory '{tmp_dir}' does not exist."
 
-    def project_destroy(self, name: str):
+    def destroy(self, name: str):
         """Destroy the specified lichen monorepo project"""
         path = Path(name)
 
