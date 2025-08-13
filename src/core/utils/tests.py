@@ -16,7 +16,7 @@ def run_tests():
 def get_test_data(filename: str):
     """Retrieve absolute filepath for test data files"""
     root = find_project_root()
-    relative_path = "tests/test_data"
+    relative_path = "tests/.test_data"
     target = root / relative_path / filename
 
     # Raise FileNotFoundError if file doesn't exist at this path
