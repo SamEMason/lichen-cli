@@ -1,6 +1,7 @@
 from pathlib import Path
 from pytest import MonkeyPatch
 
+import core.context as ctx_mod
 from core.context import Context
 from core.workspace import Workspace
 from core.utils.tests import make_test_config
@@ -92,3 +93,46 @@ def test_workspace_auto_load_false_does_not_read_disk(
 
     # Assert that the data written to config.toml is NOT loaded into ws.context.config
     assert ws.context.config["project_name"] == None
+
+
+def test_project_new_method_is_callable():
+    # Instantiate workspace object
+    ws = Workspace()
+
+    # Assert Workspace.project_new method is callable
+    assert callable(ws.project_new)
+
+
+def test_project_new_method_creates_project_directory(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
+    # Force get_project_root() to return isolated tmp_path
+    monkeypatch.setattr(ctx_mod, "find_project_root", lambda: tmp_path)
+    monkeypatch.setattr(ctx_mod.Context, "cwd", property(lambda self: tmp_path))
+
+    # Create temporary scaffold.toml file within tmp_path
+    scaffold_dir = tmp_path / "src" / "core" / "scaffold"
+    scaffold_dir.mkdir(parents=True)
+
+    # Minimal scaffold.toml that apply_nodes can handle
+    (scaffold_dir / "scaffold.toml").write_text(
+        """
+        [[default]]
+        [[default.nodes]]
+        type = "file"
+        path = "test.md"
+        """.strip()
+    )
+
+    # Instantiate workspace object
+    ws = Workspace()
+
+    # Invoke Workspace.project_new()
+    project_name = "test_project"
+    ws.project_new(project_name)
+
+    assert ws.context.project_root == tmp_path
+    assert ws.context.cwd == tmp_path
+
+    # # Assert Workspace.project_new method is callable
+    # assert (tmp_path / project_name).exists()

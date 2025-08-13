@@ -1,3 +1,3 @@
-from core.scaffold.scaffold import scaffold_project
+from core.scaffold.scaffolder import Scaffolder
 
-__all__ = ["scaffold_project"]
+__all__ = ["Scaffolder"]

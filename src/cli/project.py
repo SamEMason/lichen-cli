@@ -2,8 +2,7 @@ from pathlib import Path
 from shutil import rmtree
 from typer import Typer
 from core.config import Config
-from core.scaffold import scaffold_project
-
+from core.workspace import Workspace
 
 app = Typer()
 
@@ -43,4 +42,6 @@ def decimate():
 @app.command()
 def new(name: str):
     """Create new lichen stack monorepo project"""
-    scaffold_project(name)
+    ws = Workspace()
+
+    ws.project_new(name)

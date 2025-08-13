@@ -84,6 +84,10 @@ class Context:
     def templates_dir(self):
         return self.scaffold_dir / "templates"
 
+    @property
+    def cwd(self):
+        return Path.cwd()
+
     def get_absolute(self, filepath: str | Path) -> Path:
         """Return absolute path under the project root."""
         path = Path(filepath).expanduser()
