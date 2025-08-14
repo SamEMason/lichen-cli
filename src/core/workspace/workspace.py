@@ -1,4 +1,5 @@
 from core.context import Context
+from core.workspace.client import ClientCapability
 from core.workspace.project import ProjectCapability
 
 
@@ -10,4 +11,5 @@ class Workspace:
         if autoload:
             self.context.load_config()
 
+        self.client = ClientCapability(self.context)
         self.project = ProjectCapability(self.context)
