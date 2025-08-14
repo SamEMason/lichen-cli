@@ -1,6 +1,8 @@
 from pathlib import Path
 from shutil import rmtree
 
+from core.constants.cli.project import BUILD_OUTPUT, decimate_fail, decimate_success
+
 from core.scaffold import Scaffolder
 from core.utils.io import load_toml
 from core.workspace.base import BaseCapability
@@ -10,7 +12,7 @@ class ProjectCapability(BaseCapability):
     scaffolder = Scaffolder()
 
     def build(self) -> str:
-        return "build process under construction..."
+        return BUILD_OUTPUT
 
     def new(self, name: str):
         # Create root directory for project
@@ -35,9 +37,9 @@ class ProjectCapability(BaseCapability):
 
         if temp_path and temp_path.exists() and temp_path.is_dir():
             rmtree(temp_path)
-            return f"Directory '{tmp_dir}' destroyed."
+            return decimate_success(tmp_dir)
         else:
-            return f"Directory '{tmp_dir}' does not exist."
+            return decimate_fail(tmp_dir)
 
     def destroy(self, name: str):
         """Destroy the specified lichen monorepo project"""  # NOTE: REFACTOR -> WRAP RMTREE
