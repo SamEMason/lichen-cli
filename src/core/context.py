@@ -102,6 +102,26 @@ class Context:
     def cwd(self) -> Path:
         return Path.cwd()
 
+    @property
+    def client_build_dir(self) -> Path | None:
+        if self.project_root is not None:
+            path = Path(self.project_root / "src" / "client_build")
+
+            if path.exists():
+                return self.get_absolute(path)
+
+        return None
+
+    @property
+    def client_build_templates_dir(self) -> Path | None:
+        if self.client_build_dir is not None:
+            path = Path(self.client_build_dir / "templates")
+
+            if path.exists():
+                return self.get_absolute(path)
+
+        return None
+
     def path_from_cmd(self, filepath: str | Path) -> Path:
         return self.cwd / filepath
 

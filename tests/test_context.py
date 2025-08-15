@@ -324,3 +324,61 @@ def test_path_from_cwd_returns_valid_path(monkeypatch: MonkeyPatch, tmp_path: Pa
 
     # Assert returned path is None
     assert path == Path(tmp_path / parent_test_path / child_test_path)
+
+
+def test_client_build_dir_returns_valid_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.client_build_dir
+
+    # Assert ctx.client_build_dir is instantiated
+    assert path is not None
+
+    # Assert templates_dir exists
+    assert path.is_dir()
+
+
+def test_client_build_returns_correct_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.client_build_dir
+
+    # Assert ctx.project_root is instantiated
+    root = ctx.project_root
+    assert root is not None
+
+    # Assert templates_dir exists
+    assert path == root / "src" / "client_build"
+
+
+def test_client_build_template_dir_returns_valid_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.client_build_templates_dir
+
+    # Assert ctx.client_build_dir is instantiated
+    assert path is not None
+
+    # Assert templates_dir exists
+    assert path.is_dir()
+
+
+def test_client_build_template_returns_correct_directory():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Return path from templates_dir
+    path = ctx.client_build_templates_dir
+
+    # Assert ctx.project_root is instantiated
+    client_build_dir = ctx.client_build_dir
+    assert client_build_dir is not None
+
+    # Assert templates_dir exists
+    assert path == client_build_dir / "templates"
