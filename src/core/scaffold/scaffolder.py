@@ -1,9 +1,29 @@
 from pathlib import Path
 
-from core.utils.io import load_template, make_dir, make_file
+from core.context import Context
+from core.utils.io import load_template, load_toml, make_dir, make_file
 
 
 class Scaffolder:
+    def __init__(self, context: Context) -> None:
+        self.context = context
+
+    def create(self, name: str):
+        # Create root directory for project
+        target = self._create_project_directory(name)
+
+        # Load scaffolding nodes from scaffold.toml
+        scaffolding = load_toml(self.context.scaffold_file)
+
+        # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
+        nodes = scaffolding["default"][0]["nodes"]
+
+        if self.context.project_root is not None:
+            # Build out project structure at target location with nodes
+            self.apply_nodes(
+                nodes=nodes, location=target, root_dir=self.context.project_root
+            )
+
     def apply_nodes(self, nodes: list[dict[str, str]], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
         # Iterate through file tree nodes and create scaffolding
@@ -32,3 +52,13 @@ class Scaffolder:
 
                 else:
                     make_file(target)
+
+    def _create_project_directory(self, name: str) -> Path:
+        # Root and current working directory
+        root = self.context.project_root
+        cwd = self.context.cwd
+
+        # Create a temporary directory around new project if cwd is the root
+        if cwd == root:
+            return cwd / self.context.config.tmp_dir / name
+        return cwd / name

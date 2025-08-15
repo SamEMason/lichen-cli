@@ -5,4 +5,5 @@ from core.context import Context
 
 @dataclass
 class BaseCapability:
-    context: Context
+    def __init__(self, context: Context):
+        self.context = context
