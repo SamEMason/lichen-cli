@@ -7,8 +7,17 @@ from core.utils.io import load_template, load_toml, make_dir, make_file
 
 
 class Scaffolder:
-    def __init__(self, context: Context) -> None:
+    def __init__(
+        self, context: Context, template_file: str | Path | None = None
+    ) -> None:
         self.context = context
+
+        # If template_file is not passed in, default to core/scaffold/scaffold.toml
+        if template_file == None:
+            self.template_file = self.context.scaffold_file
+        else:
+            template_file = Path(template_file)
+            self.template_file = template_file
 
     def create(self, name: str, filepath: Optional[str | Path] = None):
         # Create root directory for project
@@ -70,7 +79,7 @@ class Scaffolder:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
-    def load_template(self, filepath: str | Path) -> str | None:
+    def read_template(self, filepath: str | Path) -> str | None:
         path = Path(filepath)
         if path.exists():
             with open(path) as file:

@@ -44,3 +44,25 @@ def test_context_initializes_correctly():
 
     # Assert Scaffolder.context is initialized
     assert isinstance(scaff.context, Context)
+
+
+def test_read_template_is_callable():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Instantiate scaffolder object
+    scaff = Scaffolder(ctx)
+
+    # Assert Scaffolder.read_template is callable
+    assert callable(scaff.read_template)
+
+
+def test_write_template_is_callable():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Instantiate scaffolder object
+    scaff = Scaffolder(ctx)
+
+    # Assert Scaffolder.write_template is callable
+    assert callable(scaff.write_template)
