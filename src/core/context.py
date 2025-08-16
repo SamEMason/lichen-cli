@@ -115,7 +115,7 @@ class Context:
     @property
     def client_build_templates_dir(self) -> Path | None:
         if self.client_build_dir is not None:
-            path = Path(self.client_build_dir / "templates")
+            path = Path(self.client_build_dir / "scaffolds")
 
             if path.exists():
                 return self.get_absolute(path)

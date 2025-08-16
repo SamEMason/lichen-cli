@@ -381,4 +381,4 @@ def test_client_build_template_returns_correct_directory():
     assert client_build_dir is not None
 
     # Assert templates_dir exists
-    assert path == client_build_dir / "templates"
+    assert path == client_build_dir / "scaffolds"

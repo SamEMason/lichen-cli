@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Optional
 
 from core.context import Context
 from core.utils.io import load_template, load_toml, make_dir, make_file
@@ -8,13 +9,17 @@ class Scaffolder:
     def __init__(self, context: Context) -> None:
         self.context = context
 
-    def create(self, name: str):
+    def create(self, name: str, filepath: Optional[str | Path] = None):
         # Create root directory for project
         target = self._create_project_directory(name)
 
         # Load scaffolding nodes from scaffold.toml
-        scaffolding = load_toml(self.context.scaffold_file)
+        if filepath is not None:
+            data_path = filepath
+        else:
+            data_path = self.context.scaffold_file
 
+        scaffolding = load_toml(data_path)
         # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
         nodes = scaffolding["default"][0]["nodes"]
 
