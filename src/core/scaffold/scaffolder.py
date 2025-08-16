@@ -11,6 +11,7 @@ class Scaffolder:
         self, context: Context, template_file: str | Path | None = None
     ) -> None:
         self.context = context
+        self.nodes: list[Node] | None = None
 
         # If template_file is not passed in, default to core/scaffold/scaffold.toml
         if template_file == None:
