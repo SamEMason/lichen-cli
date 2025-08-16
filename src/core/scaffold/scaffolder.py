@@ -80,11 +80,11 @@ class Scaffolder:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
-    def read_nodes(self, filepath: str | Path) -> str | None:
+    def load_nodes(self, filepath: str | Path) -> str | None:
         path = Path(filepath)
         if path.exists():
             with open(path) as file:
                 return file.read()
 
-    def write_nodes(self, nodes: dict[str, list[Node]]):
+    def persist_nodes(self, nodes: dict[str, list[Node]]):
         print(nodes)
