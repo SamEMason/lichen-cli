@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional
 
 from core.context import Context
+from core.scaffold.node import Node
 from core.utils.io import load_template, load_toml, make_dir, make_file
 
 
@@ -20,6 +21,7 @@ class Scaffolder:
             data_path = self.context.scaffold_file
 
         scaffolding = load_toml(data_path)
+
         # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
         nodes = scaffolding["default"][0]["nodes"]
 
@@ -67,3 +69,12 @@ class Scaffolder:
         if cwd == root:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
+
+    def load_template(self, filepath: str | Path) -> str | None:
+        path = Path(filepath)
+        if path.exists():
+            with open(path) as file:
+                return file.read()
+
+    def write_template(self, nodes: dict[str, list[Node]]):
+        print(nodes)
