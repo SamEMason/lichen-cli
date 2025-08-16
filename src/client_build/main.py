@@ -1,36 +1,14 @@
-from typer import Argument, Typer
-from typing_extensions import Annotated
+from typer import Typer
 
-from core.config import CONFIG_FILENAME
-from core.context import Context
-from core.utils.io import load_toml
+from client_build.commands.list import app as list_app
+from client_build.commands.new import app as new_app
+from client_build.commands.sync import app as sync_app
+from client_build.commands.version import app as version_app
+
 
 app = Typer()
 
-
-@app.command()
-def new(name: str):
-    print(f"Scaffolding new project: {name}...")
-
-
-@app.command()
-def sync(name: Annotated[str, Argument()] = "ALL"):
-    if name == "ALL":
-        print(f"Syncing scaffolds...")
-    else:
-        print(f"Syncing scaffold: {name}...")
-
-
-@app.command()
-def version():
-    ctx = Context()
-
-    if ctx.client_build_dir is None:
-        raise NotADirectoryError("Client_build directory not found.")
-
-    path = ctx.client_build_dir / CONFIG_FILENAME
-    data = load_toml(path)
-
-    version = data.get("version", "unknown")
-
-    print(f"Scaffold -- version {version}")
+app.add_typer(list_app)
+app.add_typer(new_app)
+app.add_typer(sync_app)
+app.add_typer(version_app)
