@@ -75,6 +75,10 @@ class Context:
     @property
     def config_file(self) -> Path:
         return self._root() / CONFIG_FILENAME
+    
+    @property
+    def test_dir(self):
+        return self._root() / "tests"
 
     @property
     def scaffold_dir(self):

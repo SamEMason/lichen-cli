@@ -235,7 +235,7 @@ def test_get_absolute_returns_valid_path():
     ctx = Context()
 
     # Prepare path
-    filepath = Path("tests/test_utils.py")
+    filepath = ctx.test_dir
 
     # Return path from scaffold_dir
     path = ctx.get_absolute(filepath)
@@ -249,7 +249,7 @@ def test_get_absolute_returns_correct_path():
     ctx = Context()
 
     # Prepare path
-    filepath = Path("tests/test_utils.py")
+    filepath = ctx.test_dir
 
     # Return path from scaffold_dir
     path = ctx.get_absolute(filepath)
@@ -382,3 +382,36 @@ def test_client_build_template_returns_correct_directory():
 
     # Assert templates_dir exists
     assert path == client_build_dir / "scaffolds"
+
+
+def test_test_dir_returns_valid_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Prepare path
+    path = ctx.test_dir
+
+    # Assert returned path is not None
+    assert path is not None
+
+    # Assert returned path is a directory
+    assert path.is_dir()
+
+
+def test_test_dir_returns_correct_path():
+    # Instantiate Context object
+    ctx = Context()
+
+    # Assert ctx.project_root is initialized
+    root = ctx.project_root
+    assert root is not None
+
+    # Get expected filepath
+    expected_path = root / "tests"
+
+    # Assert ctx.test_dir is instantiated
+    path = ctx.test_dir
+    assert path is not None
+
+    # Assert templates_dir exists
+    assert path == expected_path
