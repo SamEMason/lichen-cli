@@ -67,15 +67,16 @@ def test_load_loads_meta_data_from_template():
     scaff = Scaffolder(ctx)
 
     # Expected load data values
+    set_name = "test_set"
     expected_data: dict[str, str | list[Node]] = {
-        "set_name": "test",
+        "set_name": set_name,
         "version": "0.0.1",
         "description": "Test scaffold.",
     }
 
     # Load test scaffold from test_registry.toml
     path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    scaff.load(path)
+    scaff.load(path, set_name)
 
     # Assert meta data is not None
     assert scaff.meta is not None
@@ -94,6 +95,7 @@ def test_load_loads_nodes_from_template():
     scaff = Scaffolder(ctx)
 
     # Expected load data values
+    set_name = "test_set"
     expected_data: list[Node] = [
         Node(
             type="file",
@@ -109,7 +111,7 @@ def test_load_loads_nodes_from_template():
 
     # Load test scaffold from test_registry.toml
     path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    scaff.load(path)
+    scaff.load(path, set_name)
 
     # Assert meta data is not None
     assert scaff.nodes is not None

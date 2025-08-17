@@ -94,14 +94,15 @@ class Scaffolder:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
-    def load(self, filepath: str | Path) -> str | None:
+    def load(self, filepath: str | Path, set_name: str) -> str | None:
         path = Path(filepath)
 
-        # Extract data from registry file at location: `filepath``
-        extracted_data: SelectedSet | None = self.extract_data(path)
+        try:
+            # Extract data from registry file at location: `filepath``
+            extracted_data: SelectedSet = self.extract_data(path, select_set=set_name)
 
-        # Raise error if registry is not found
-        if extracted_data is None:
+        except FileNotFoundError:
+            # Raise error if registry is not found
             raise FileNotFoundError(f"Registry not found: {filepath}.")
 
         # Store meta data values in memory
@@ -111,44 +112,50 @@ class Scaffolder:
             "description": extracted_data.get("description", ""),
         }
 
-        # If extracted nodes are of type dict, iteratively add them to Scaffolder.nodes
-        if isinstance(extracted_data.get("nodes"), dict):
-            nodes = extracted_data.get("nodes")
+        # Select nodes from extracted registry data
+        nodes = extracted_data.get("nodes")
 
-            for node in nodes:
-                type = node["type"]
-                path = node["path"]
-                template = node["template"]
+        # Format and store selected nodes
+        for node in nodes:
+            type = node["type"]
+            path = node["path"]
+            template = node["template"]
 
-                new_node = Node(type=type, path=path, template=template)
-                self.nodes.append(new_node)
+            # Create new Node type to store node data
+            new_node = Node(type=type, path=path, template=template)
 
-    def extract_data(self, filepath: Path) -> SelectedSet | None:
-        # If the filepath exists, load the data from that location
-        if filepath.exists():
-            data = load_toml(filepath)
+            # Add node to nodes property stored in memory
+            self.nodes.append(new_node)
 
-            for set_name, section in data.items():
-                # Extract and normalize meta data
-                version = cast(str, section.get("version"))
-                description = cast(str, section.get("description"))
+    def extract_data(self, filepath: Path, select_set: str) -> SelectedSet:
+        # Load data from filepath
+        data = load_toml(filepath)
 
-                # Extract and format nodes
-                raw_nodes = section.get("nodes")
-                nodes: list[Node] = [
-                    Node(
-                        type=node["type"], path=node["path"], template=node["template"]
-                    )
-                    for node in raw_nodes
-                ]
+        # Check if selected set is a valid key
+        if select_set not in data:
+            raise KeyError(f"Scaffold set `{select_set}` not found.")
 
-                # Return SelectedSet object
-                return {
-                    "set_name": set_name,
-                    "version": version,
-                    "description": description,
-                    "nodes": nodes,
-                }
+        # Select the selected set from registry data
+        set = data[select_set]
+
+        # Extract and normalize meta data
+        version = cast(str, set.get("version"))
+        description = cast(str, set.get("description"))
+        raw_nodes: list[Node] = set.get("nodes")
+
+        # Extract and normalize nodes as Node type objects
+        nodes: list[Node] = [
+            Node(type=node["type"], path=node["path"], template=node["template"])
+            for node in raw_nodes
+        ]
+
+        # Return SelectedSet object
+        return {
+            "set_name": select_set,
+            "version": version,
+            "description": description,
+            "nodes": nodes,
+        }
 
     def save(self):
         pass
