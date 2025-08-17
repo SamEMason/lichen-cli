@@ -68,7 +68,7 @@ def test_load_loads_meta_data_from_template():
 
     # Expected load data values
     expected_data: dict[str, str | list[Node]] = {
-        "scaffold": "test",
+        "set_name": "test",
         "version": "0.0.1",
         "description": "Test scaffold.",
     }
@@ -81,7 +81,7 @@ def test_load_loads_meta_data_from_template():
     assert scaff.meta is not None
 
     # Assert meta data loads into memory
-    assert scaff.meta.get("scaffold") == expected_data["scaffold"]
+    assert scaff.meta.get("set_name") == expected_data["set_name"]
     assert scaff.meta.get("version") == expected_data["version"]
     assert scaff.meta.get("description") == expected_data["description"]
 

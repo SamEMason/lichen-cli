@@ -1,9 +1,22 @@
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional, TypedDict, cast
 
 from core.context import Context
 from core.scaffold.node import Node
 from core.utils.io import load_template, load_toml, make_dir, make_file
+
+
+class MetaData(TypedDict):
+    set_name: str
+    version: str
+    description: str
+
+
+class SelectedSet(TypedDict):
+    set_name: str
+    version: str
+    description: str
+    nodes: list[Node]
 
 
 class Scaffolder:
@@ -11,7 +24,7 @@ class Scaffolder:
         self, context: Context, template_file: str | Path | None = None
     ) -> None:
         self.context = context
-        self.meta: dict[str, Any] | None = None
+        self.meta: MetaData | None = None
         self.scaffold: list[Node] = []
 
         # If template_file is not passed in, default to core/scaffold/scaffold.toml
@@ -83,46 +96,55 @@ class Scaffolder:
 
     def load(self, filepath: str | Path) -> str | None:
         path = Path(filepath)
-        if path.exists():
-            data = load_toml(path)
-            extracted_data = self.extract_data(data)
 
-            if extracted_data is not None:
-                nodes = extracted_data.get("nodes")
-                self.meta = {
-                    "scaffold": extracted_data.get("scaffold", ""),
-                    "version": extracted_data.get("version", ""),
-                    "description": extracted_data.get("description", ""),
-                }
+        extracted_data: SelectedSet | None = self.extract_data(path)
 
-                if isinstance(nodes, list):
-                    for node in nodes:
-                        type = node["type"]
-                        path = node["path"]
-                        template = node["template"]
-
-                        new_node = Node(type=type, path=path, template=template)
-                        self.scaffold.append(new_node)
-
-            else:
-                raise ValueError(f"Failed to load from registry: {filepath}.")
-
-    def extract_data(
-        self, data: dict[str, dict[str, str | list[Node]]]
-    ) -> dict[str, str | list[Node]] | None:
-        for scaffold in data:
-            scaffold_name: str = scaffold
-            section: dict[str, str | list[Node]] = data[scaffold]
-            version: str | list[Node] = section["version"]
-            description: str | list[Node] = section["description"]
-            nodes: str | list[Node] = section["nodes"]
-
-            return {
-                "scaffold": scaffold_name,
-                "version": version,
-                "description": description,
-                "nodes": nodes,
+        if extracted_data is not None:
+            self.meta = {
+                "set_name": extracted_data.get("set_name", ""),
+                "version": extracted_data.get("version", ""),
+                "description": extracted_data.get("description", ""),
             }
+
+            if isinstance(extracted_data.get("nodes"), dict):
+                nodes = extracted_data.get("nodes")
+
+                for node in nodes:
+                    type = node["type"]
+                    path = node["path"]
+                    template = node["template"]
+
+                    new_node = Node(type=type, path=path, template=template)
+                    self.scaffold.append(new_node)
+
+        else:
+            raise FileNotFoundError(f"Registry not found: {filepath}.")
+
+    def extract_data(self, filepath: Path) -> SelectedSet | None:
+        # If the filepath exists, load the data from that location
+        if filepath.exists():
+            data = load_toml(filepath)
+
+            for set_name, section in data.items():
+                # Extract meta data
+                version = cast(str, section.get("version"))
+                description = cast(str, section.get("description"))
+
+                # Extract and format nodes
+                raw_nodes = section.get("nodes")
+                nodes: list[Node] = [
+                    Node(
+                        type=node["type"], path=node["path"], template=node["template"]
+                    )
+                    for node in raw_nodes
+                ]
+
+                return {
+                    "set_name": set_name,
+                    "version": version,
+                    "description": description,
+                    "nodes": nodes,
+                }
 
     def save(self, nodes: dict[str, list[Node]]):
         print(nodes)
