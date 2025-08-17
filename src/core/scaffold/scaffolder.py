@@ -25,7 +25,7 @@ class Scaffolder:
     ) -> None:
         self.context = context
         self.meta: MetaData | None = None
-        self.scaffold: list[Node] = []
+        self.nodes: list[Node] = []
 
         # If template_file is not passed in, default to core/scaffold/scaffold.toml
         if template_file == None:
@@ -97,28 +97,31 @@ class Scaffolder:
     def load(self, filepath: str | Path) -> str | None:
         path = Path(filepath)
 
+        # Extract data from registry file at location: `filepath``
         extracted_data: SelectedSet | None = self.extract_data(path)
 
-        if extracted_data is not None:
-            self.meta = {
-                "set_name": extracted_data.get("set_name", ""),
-                "version": extracted_data.get("version", ""),
-                "description": extracted_data.get("description", ""),
-            }
-
-            if isinstance(extracted_data.get("nodes"), dict):
-                nodes = extracted_data.get("nodes")
-
-                for node in nodes:
-                    type = node["type"]
-                    path = node["path"]
-                    template = node["template"]
-
-                    new_node = Node(type=type, path=path, template=template)
-                    self.scaffold.append(new_node)
-
-        else:
+        # Raise error if registry is not found
+        if extracted_data is None:
             raise FileNotFoundError(f"Registry not found: {filepath}.")
+
+        # Store meta data values in memory
+        self.meta = {
+            "set_name": extracted_data.get("set_name", ""),
+            "version": extracted_data.get("version", ""),
+            "description": extracted_data.get("description", ""),
+        }
+
+        # If extracted nodes are of type dict, iteratively add them to Scaffolder.nodes
+        if isinstance(extracted_data.get("nodes"), dict):
+            nodes = extracted_data.get("nodes")
+
+            for node in nodes:
+                type = node["type"]
+                path = node["path"]
+                template = node["template"]
+
+                new_node = Node(type=type, path=path, template=template)
+                self.nodes.append(new_node)
 
     def extract_data(self, filepath: Path) -> SelectedSet | None:
         # If the filepath exists, load the data from that location
@@ -126,7 +129,7 @@ class Scaffolder:
             data = load_toml(filepath)
 
             for set_name, section in data.items():
-                # Extract meta data
+                # Extract and normalize meta data
                 version = cast(str, section.get("version"))
                 description = cast(str, section.get("description"))
 
@@ -139,6 +142,7 @@ class Scaffolder:
                     for node in raw_nodes
                 ]
 
+                # Return SelectedSet object
                 return {
                     "set_name": set_name,
                     "version": version,
@@ -146,5 +150,5 @@ class Scaffolder:
                     "nodes": nodes,
                 }
 
-    def save(self, nodes: dict[str, list[Node]]):
-        print(nodes)
+    def save(self):
+        pass

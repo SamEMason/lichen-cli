@@ -112,10 +112,10 @@ def test_load_loads_nodes_from_template():
     scaff.load(path)
 
     # Assert meta data is not None
-    assert scaff.scaffold is not None
+    assert scaff.nodes is not None
 
     # Assert meta data loads into memory
-    nodes = scaff.scaffold
+    nodes = scaff.nodes
 
     # Assert nodes loads into memory
     assert nodes is not None
