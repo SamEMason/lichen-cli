@@ -1,0 +1,7 @@
+[test]
+version = "0.0.1"
+description = "Test scaffold."
+nodes = [
+    { type = "file", path = ".lichen/registry.toml", template = "test/path/.lichen/registry.toml" },
+    { type = "file", path = ".gitignore", template = "test/path/.gitignore" },
+]

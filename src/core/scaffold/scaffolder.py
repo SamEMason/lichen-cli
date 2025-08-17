@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 from core.context import Context
 from core.scaffold.node import Node
@@ -11,7 +11,8 @@ class Scaffolder:
         self, context: Context, template_file: str | Path | None = None
     ) -> None:
         self.context = context
-        self.nodes: list[Node] | None = None
+        self.meta: dict[str, Any] | None = None
+        self.scaffold: list[Node] | None = None
 
         # If template_file is not passed in, default to core/scaffold/scaffold.toml
         if template_file == None:
@@ -80,11 +81,41 @@ class Scaffolder:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
-    def load_nodes(self, filepath: str | Path) -> str | None:
+    def load(self, filepath: str | Path) -> str | None:
         path = Path(filepath)
         if path.exists():
-            with open(path) as file:
-                return file.read()
+            data = load_toml(path)
+            extracted_data = self.extract_data(data)
 
-    def persist_nodes(self, nodes: dict[str, list[Node]]):
+            if extracted_data is not None:
+                self.meta = {
+                    "scaffold": extracted_data.get("scaffold", ""),
+                    "version": extracted_data.get("version", ""),
+                    "description": extracted_data.get("description", ""),
+                }
+
+                if isinstance(extracted_data["nodes"], list):
+                    self.scaffold = extracted_data["nodes"]
+            else:
+                raise ValueError(f"Failed to load from registry: {filepath}.")
+
+    def extract_data(
+        self, data: dict[str, dict[str, str | list[Node]]]
+    ) -> dict[str, str | list[Node]] | None:
+        for scaffold in data:
+            scaffold_name: str = scaffold
+            section: dict[str, str | list[Node]] = data[scaffold]
+            version: str | list[Node] = section["version"]
+            description: str | list[Node] = section["description"]
+            nodes: str | list[Node] = section["nodes"]
+
+            return {
+                "scaffold": scaffold_name,
+                "version": version,
+                "description": description,
+                "nodes": nodes,
+            }
+
+    def save(self, nodes: dict[str, list[Node]]):
         print(nodes)
+    
