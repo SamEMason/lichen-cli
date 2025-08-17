@@ -12,7 +12,7 @@ class Scaffolder:
     ) -> None:
         self.context = context
         self.meta: dict[str, Any] | None = None
-        self.scaffold: list[Node] | None = None
+        self.scaffold: list[Node] = []
 
         # If template_file is not passed in, default to core/scaffold/scaffold.toml
         if template_file == None:
@@ -88,14 +88,22 @@ class Scaffolder:
             extracted_data = self.extract_data(data)
 
             if extracted_data is not None:
+                nodes = extracted_data.get("nodes")
                 self.meta = {
                     "scaffold": extracted_data.get("scaffold", ""),
                     "version": extracted_data.get("version", ""),
                     "description": extracted_data.get("description", ""),
                 }
 
-                if isinstance(extracted_data["nodes"], list):
-                    self.scaffold = extracted_data["nodes"]
+                if isinstance(nodes, list):
+                    for node in nodes:
+                        type = node["type"]
+                        path = node["path"]
+                        template = node["template"]
+
+                        new_node = Node(type=type, path=path, template=template)
+                        self.scaffold.append(new_node)
+
             else:
                 raise ValueError(f"Failed to load from registry: {filepath}.")
 
@@ -118,4 +126,3 @@ class Scaffolder:
 
     def save(self, nodes: dict[str, list[Node]]):
         print(nodes)
-    
