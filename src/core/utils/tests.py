@@ -1,9 +1,10 @@
 import subprocess
 from pathlib import Path
 from pytest import MonkeyPatch
-from typing import Any
+from typing import Any, Optional
 
 from core.config import CONFIG_FILENAME
+from core.context import Context
 from core.utils.discovery import find_project_root
 from core.utils.io import write_toml
 
@@ -51,3 +52,22 @@ def make_test_config(
 
     # Create config.toml file
     write_toml(path, data)
+
+
+def registry_arguments(
+    path: Optional[str | Path] = None, selected_set: Optional[str] = None
+) -> tuple[Path, str]:
+
+    ctx = Context()
+
+    # Instatiate registry file path with default value if None
+    if path is None:
+        path = ctx.test_dir / ".test_data" / "test_registry.toml"
+    else:
+        path = Path(path)
+
+    # Instatiate selected_set with default value if None
+    if selected_set is None:
+        selected_set = "test_set"
+
+    return path, selected_set
