@@ -1,14 +1,15 @@
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 
-class Node:
+@dataclass
+class Node():
     """Template file tree node"""
 
-    def __init__(self, type: str, path: Path, template: Path):
-        self.type = type
-        self.path = path
-        self.template = template
+    type: str
+    path: str | Path
+    template: str | Path
 
     def __getitem__(self, key: str):
         return getattr(self, key)
