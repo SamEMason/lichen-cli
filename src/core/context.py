@@ -14,6 +14,7 @@ ENV_SECTION = "dev"
 class Context:
     config: Config = field(default_factory=Config)
     project_root: Optional[Path] = None
+    selected_set: str = "default"
 
     def __post_init__(self):
         if self.project_root is None:
@@ -75,7 +76,7 @@ class Context:
     @property
     def config_file(self) -> Path:
         return self._root() / CONFIG_FILENAME
-    
+
     @property
     def test_dir(self):
         return self._root() / "tests"
