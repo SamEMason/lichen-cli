@@ -1,5 +1,4 @@
 from pathlib import Path
-from pytest import raises
 
 from core.context import Context
 from core.scaffold import Node, Scaffolder
@@ -125,50 +124,6 @@ def test_load_loads_nodes_from_template():
 
     for i, node in enumerate(nodes):
         assert node["type"] == expected_data[i].type
-
-
-def test_extract_data_is_callable():
-    # Instantiate Context object
-    ctx = Context()
-
-    # Instantiate scaffolder object
-    scaff = Scaffolder(ctx)
-
-    # Assert Scaffolder.save is callable
-    assert callable(scaff.extract_data)
-
-
-def test_extract_data_raises_exception_when_selected_set_does_not_exist():
-    # Instantiate Context object
-    ctx = Context()
-
-    # Instantiate scaffolder object
-    scaff = Scaffolder(ctx)
-
-    # Instatiate non-existent file path
-    path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    selected_set = "non_existent_set"
-
-    # Call extract_data with non-existent file path
-    with raises(KeyError):
-        scaff.extract_data(path, selected_set)
-
-
-def test_extract_data_raises_exception_when_file_does_not_exist():
-    # Instantiate Context object
-    ctx = Context()
-
-    # Instantiate scaffolder object
-    scaff = Scaffolder(ctx)
-
-    # Instatiate non-existent file path
-    assert ctx.project_root is not None
-    path = ctx.project_root / "non" / "existent" / "path"
-    selected_set = "test"
-
-    # Call extract_data with non-existent file path
-    with raises(FileNotFoundError):
-        scaff.extract_data(path, selected_set)
 
 
 def test_save_is_callable():

@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, TypedDict, cast
+from typing import Optional, TypedDict
 
 from core.context import Context
 from core.registry import Registry, SelectedSet
@@ -99,7 +99,7 @@ class Scaffolder:
 
         try:
             # Extract data from registry file at location: `filepath``
-            extracted_data: SelectedSet = self.extract_data(path, select_set=set_name)
+            extracted_data: SelectedSet = self.registry.load(path, select_set=set_name)
 
         except FileNotFoundError:
             # Raise error if registry is not found
@@ -126,36 +126,6 @@ class Scaffolder:
 
             # Add node to nodes property stored in memory
             self.nodes.append(new_node)
-
-    def extract_data(self, filepath: Path, select_set: str) -> SelectedSet:
-        # Load data from filepath
-        data = load_toml(filepath)
-
-        # Check if selected set is a valid key
-        if select_set not in data:
-            raise KeyError(f"Scaffold set `{select_set}` not found.")
-
-        # Select the selected set from registry data
-        set = data[select_set]
-
-        # Extract and normalize meta data
-        version = cast(str, set.get("version"))
-        description = cast(str, set.get("description"))
-        raw_nodes: list[Node] = set.get("nodes")
-
-        # Extract and normalize nodes as Node type objects
-        nodes: list[Node] = [
-            Node(type=node["type"], path=node["path"], template=node["template"])
-            for node in raw_nodes
-        ]
-
-        # Return SelectedSet object
-        return {
-            "set_name": select_set,
-            "version": version,
-            "description": description,
-            "nodes": nodes,
-        }
 
     def save(self):
         pass
