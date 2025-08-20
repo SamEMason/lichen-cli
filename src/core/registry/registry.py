@@ -34,9 +34,14 @@ class Registry:
         # Extract selected set from registry data
         set = data[select_set]
 
+        # Get each property within the selected set
         version = set.get("version")
         description = set.get("description")
-        raw_nodes: list[Node] = set.get("nodes")
+        raw_nodes: list[Node] | None = set.get("nodes")
+
+        # Raise exception if raw nodes is NoneType
+        if raw_nodes is None:
+            raise ValueError("Registry data could not be loaded.")
 
         # Extract and normalize nodes as Node type objects
         nodes: list[Node] = [
@@ -60,4 +65,3 @@ class Registry:
             raise ValueError("Property `set_name` must contain at least one character.")
 
         # Load data from filepath
-        
