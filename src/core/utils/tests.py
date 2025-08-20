@@ -5,6 +5,8 @@ from typing import Any, Optional
 
 from core.config import CONFIG_FILENAME
 from core.context import Context
+from core.registry import SelectedSet
+from core.scaffold import Node
 from core.utils.discovery import find_project_root
 from core.utils.io import write_toml
 
@@ -71,3 +73,18 @@ def registry_arguments(
         selected_set = "test_set"
 
     return path, selected_set
+
+
+def expected_registry_values(
+    set_name: str = "default",
+    version: str = "0.0.1",
+    description: str = "A default scaffold set",
+    nodes: list[Node] = [],
+) -> SelectedSet:
+
+    return {
+        "set_name": set_name,
+        "version": version,
+        "description": description,
+        "nodes": nodes,
+    }
