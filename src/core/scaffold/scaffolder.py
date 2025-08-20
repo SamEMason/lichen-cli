@@ -17,21 +17,21 @@ class Scaffolder:
     def __init__(
         self,
         context: Context,
-        template_file: Optional[str | Path] = None,
+        registry_path: Optional[str | Path] = None,
     ) -> None:
         self.context = context
         self.meta: MetaData | None = None
         self.nodes: list[Node] = []
 
-        # If template_file is not passed in, default to core/scaffold/scaffold.toml
-        if template_file == None:
-            self.template_file = self.context.scaffold_file
+        # If registry_path is not passed in, default to core/scaffold/scaffold.toml
+        if registry_path == None:
+            self.registry_path = self.context.scaffold_file
         else:
-            template_file = Path(template_file)
-            self.template_file = template_file
+            registry_path = Path(registry_path)
+            self.registry_path = registry_path
 
         self.registry = Registry(
-            path=self.template_file, selected_set=self.context.selected_set
+            path=self.registry_path, selected_set=self.context.selected_set
         )
 
     def create(self, name: str, filepath: Optional[str | Path] = None):
