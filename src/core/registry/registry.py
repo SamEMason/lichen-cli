@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, TypedDict
+from typing import Any, TextIO, TypedDict
 
 from core.scaffold import Node
 from core.utils.io import load_toml
@@ -26,6 +26,45 @@ class Registry:
 
         # Return loaded data from filepath
         return load_toml(filepath)
+
+    def _write(self, filepath: Path, data: dict[str, SelectedSet]):
+        with filepath.open("w", encoding="utf-8") as f:
+            for set, props in data.items():
+                version = props.get("version")
+                description = props.get("description")
+                nodes = props.get("nodes")
+
+                print(nodes)
+
+                current_node_list = [
+                    Node(
+                        type=node["type"], path=node["path"], template=node["template"]
+                    )
+                    for node in nodes
+                ]
+
+                current_set = SelectedSet(
+                    set_name=set,
+                    version=version,
+                    description=description,
+                    nodes=current_node_list,
+                )
+
+                self._write_registry_set(filepath=filepath, set=current_set, file=f)
+
+    def _write_registry_set(self, file: TextIO, filepath: Path, set: SelectedSet):
+        file.write(f'["{set["set_name"]}"]\n')
+        file.write(f'version = "{set["version"]}"\n')
+        file.write(f'description = "{set["description"]}"\n')
+        file.write(f"nodes = [\n")
+
+        for node in set["nodes"]:
+            file.write("\t{ ")
+            file.write(
+                f'type = "{node["type"]}", path = "{node["path"]}", template = "{node["template"]}"'
+            )
+            file.write(" },\n")
+        file.write("]\n\n")
 
     def load(self, filepath: Path, select_set: str) -> SelectedSet:
         # Read raw registry data
@@ -57,11 +96,22 @@ class Registry:
             nodes=nodes,
         )
 
-    def save(self, filepath: str | Path, set: SelectedSet):
-        path = Path(filepath)
-
+    def save(self, registry_path: str | Path, set: SelectedSet):
+        registry_path = Path(registry_path)
         # Raise error if set_name is an empty string
-        if set["set_name"] is "":
+        if set["set_name"] == "":
             raise ValueError("Property `set_name` must contain at least one character.")
 
-        # Load data from filepath
+        # Read data from registry_path
+        data = self._read(registry_path)
+
+        # Update loaded data dictionary with new selected set data
+        set_name = set["set_name"]
+
+        if data.get(set_name) is None:
+            raise KeyError(f"Set name {set_name} is not a valid key.")
+
+        data[set_name] = set
+
+        # Overwrite data back onto registry_path with proper formatting
+        self._write(filepath=registry_path, data=data)

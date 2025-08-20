@@ -86,27 +86,26 @@ def test_save_writes_meta_data_to_registry():
     # Expected values to be written to registry
     set_name = "test_set"
 
-    expected_values: SelectedSet = expected_registry_values(set_name=set_name)
+    expected: SelectedSet = expected_registry_values(set_name=set_name)
 
-    registry_load_path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    registry_save_path = ctx.test_dir / ".test_data" / "test_registry_save.toml"
+    registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
 
     # Initialize Registry arguments
-    (path, selected_set) = registry_arguments(path=registry_load_path)
+    (path, selected_set) = registry_arguments(path=registry_path)
 
     # Instantiate Context object
     registry = Registry(path, selected_set)
 
     # Save expected values to the registry
-    registry.save(filepath=registry_save_path, set=expected_values)
+    registry.save(registry_path=registry_path, set=expected)
 
     # Load data from registry to check against expected values
-    loaded_set = registry.load(filepath=registry_save_path, select_set=set_name)
+    updated = registry.load(filepath=registry_path, select_set=set_name)
 
-    # Assert loaded_set meta data is equivalent to expected meta data values
-    assert loaded_set["set_name"] == expected_values["set_name"]
-    assert loaded_set["version"] == expected_values["version"]
-    assert loaded_set["description"] == expected_values["description"]
+    # Assert updated meta data is equivalent to expected meta data values
+    assert updated["set_name"] == expected["set_name"]
+    assert updated["version"] == expected["version"]
+    assert updated["description"] == expected["description"]
 
 
 def test_save_raises_value_error_when_set_name_is_empty_string():
@@ -125,4 +124,4 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
 
     with raises(ValueError):
         # Save expected values to the registry
-        registry.save(filepath=registry_path, set=expected_values)
+        registry.save(registry_path=registry_path, set=expected_values)

@@ -1,1 +1,15 @@
-[test_set]
+["test_set"]
+version = "0.0.1"
+description = "Test scaffold."
+nodes = [
+    { type = "file", path = ".lichen/registry.toml", template = "test/path/.lichen/registry.toml" },
+    { type = "file", path = ".gitignore", template = "test/path/.gitignore" },
+]
+
+["other_set"]
+version = "0.0.1"
+description = "Another test scaffold."
+nodes = [
+    { type = "file", path = ".lichen/registry.toml", template = "test/path/.lichen/registry.toml" },
+    { type = "file", path = ".gitignore", template = "test/path/.gitignore" },
+]

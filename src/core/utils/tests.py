@@ -76,15 +76,15 @@ def registry_arguments(
 
 
 def expected_registry_values(
-    set_name: str = "default",
+    set_name: str = "test_set",
     version: str = "0.0.1",
-    description: str = "A default scaffold set",
-    nodes: list[Node] = [],
+    description: str = "Test scaffold.",
+    nodes: list[Node] = [Node(type="asdf", path="testpath", template="testtemp")],
 ) -> SelectedSet:
 
-    return {
-        "set_name": set_name,
-        "version": version,
-        "description": description,
-        "nodes": nodes,
-    }
+    return SelectedSet(
+        set_name=set_name,
+        version=version,
+        description=description,
+        nodes=nodes,
+    )
