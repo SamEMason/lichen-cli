@@ -28,14 +28,16 @@ class Registry:
         return load_toml(filepath)
 
     def _write(self, filepath: Path, data: dict[str, SelectedSet]):
+        # Open registry file for overwriting
         with filepath.open("w", encoding="utf-8") as f:
+            # Iterate through each scaffold set in `data` argument
             for set, props in data.items():
+                # Extract meta data and nodes from scaffold set data
                 version = props.get("version")
                 description = props.get("description")
                 nodes = props.get("nodes")
 
-                print(nodes)
-
+                # Convert extracted nodes into Node objects
                 current_node_list = [
                     Node(
                         type=node["type"], path=node["path"], template=node["template"]
@@ -43,6 +45,7 @@ class Registry:
                     for node in nodes
                 ]
 
+                # Package the current scaffold set data into a SelectedSet object
                 current_set = SelectedSet(
                     set_name=set,
                     version=version,
@@ -50,20 +53,29 @@ class Registry:
                     nodes=current_node_list,
                 )
 
-                self._write_registry_set(filepath=filepath, set=current_set, file=f)
+                # Invoke _write_registry_set to write the current set in proper format
+                self._write_registry_set(set=current_set, file=f)
 
-    def _write_registry_set(self, file: TextIO, filepath: Path, set: SelectedSet):
+    def _write_registry_set(self, file: TextIO, set: SelectedSet):
+        # Write the scaffold set name
         file.write(f'["{set["set_name"]}"]\n')
+
+        # Write the scaffold set meta data
         file.write(f'version = "{set["version"]}"\n')
         file.write(f'description = "{set["description"]}"\n')
+
+        # Write in nodes list opening bracket
         file.write(f"nodes = [\n")
 
+        # Iterate through nodes writing each object manually
         for node in set["nodes"]:
             file.write("\t{ ")
             file.write(
                 f'type = "{node["type"]}", path = "{node["path"]}", template = "{node["template"]}"'
             )
             file.write(" },\n")
+
+        # Close node list bracket and create space below set
         file.write("]\n\n")
 
     def load(self, filepath: Path, select_set: str) -> SelectedSet:
@@ -109,7 +121,7 @@ class Registry:
         set_name = set["set_name"]
 
         if data.get(set_name) is None:
-            raise KeyError(f"Set name {set_name} is not a valid key.")
+            raise KeyError(f"Set name `{set_name}` is not a valid key.")
 
         data[set_name] = set
 
