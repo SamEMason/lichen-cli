@@ -1,7 +1,5 @@
 from pytest import raises
 
-# from pytest import mark, raises
-
 from core.context import Context
 from core.registry import Registry, SelectedSet
 from core.utils.tests import expected_registry_values, registry_arguments
@@ -78,7 +76,6 @@ def test_save_is_callable():
     assert callable(registry.save)
 
 
-# @mark.skip()
 def test_save_writes_meta_data_to_registry():
     # Instantiate Context object
     ctx = Context()
@@ -123,5 +120,23 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
     registry = Registry(path, selected_set)
 
     with raises(ValueError):
+        # Save expected values to the registry
+        registry.save(registry_path=registry_path, set=expected_values)
+
+def test_save_raises_key_error_when_set_name_is_not_valid_key():
+    # Instantiate Context object
+    ctx = Context()
+
+    expected_values: SelectedSet = expected_registry_values(set_name="bad_key")
+
+    registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
+
+    # Initialize Registry arguments
+    (path, selected_set) = registry_arguments(path=registry_path)
+
+    # Instantiate Context object
+    registry = Registry(path, selected_set)
+
+    with raises(KeyError):
         # Save expected values to the registry
         registry.save(registry_path=registry_path, set=expected_values)
