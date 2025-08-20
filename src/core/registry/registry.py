@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import cast, TypedDict
+from typing import Any, TypedDict
 
 from core.scaffold import Node
 from core.utils.io import load_toml
@@ -18,22 +18,24 @@ class Registry:
     path: str | Path
     selected_set: str
 
-    
+    def _read(self, filepath: Path) -> dict[str, Any]:
+        """Read raw data from TOML file"""
+        # Raise exception if file not found at `filepath`
+        if not filepath.exists():
+            raise FileNotFoundError(f"File {filepath} does not exist.")
+
+        # Return loaded data from filepath
+        return load_toml(filepath)
 
     def load(self, filepath: Path, select_set: str) -> SelectedSet:
-        # Load data from filepath
-        data = load_toml(filepath)
+        # Read raw registry data
+        data = self._read(filepath=filepath)
 
-        # Check if selected set is a valid key
-        if select_set not in data:
-            raise KeyError(f"Scaffold set `{select_set}` not found.")
-
-        # Select the selected set from registry data
+        # Extract selected set from registry data
         set = data[select_set]
 
-        # Extract and normalize meta data
-        version = cast(str, set.get("version"))
-        description = cast(str, set.get("description"))
+        version = set.get("version")
+        description = set.get("description")
         raw_nodes: list[Node] = set.get("nodes")
 
         # Extract and normalize nodes as Node type objects
@@ -43,9 +45,19 @@ class Registry:
         ]
 
         # Return SelectedSet object
-        return {
-            "set_name": select_set,
-            "version": version,
-            "description": description,
-            "nodes": nodes,
-        }
+        return SelectedSet(
+            set_name=select_set,
+            version=version,
+            description=description,
+            nodes=nodes,
+        )
+
+    def save(self, filepath: str | Path, set: SelectedSet):
+        path = Path(filepath)
+
+        # Raise error if set_name is an empty string
+        if set["set_name"] is "":
+            raise ValueError("Property `set_name` must contain at least one character.")
+
+        # Load data from filepath
+        
