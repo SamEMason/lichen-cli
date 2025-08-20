@@ -1,3 +1,3 @@
-from core.registry.registry import Registry
+from core.registry.registry import Registry, SelectedSet
 
-__all__ = ["Registry"]
+__all__ = ["Registry", "SelectedSet"]

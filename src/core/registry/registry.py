@@ -1,16 +1,24 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import cast
+from typing import cast, TypedDict
 
 from core.scaffold import Node
-from core.scaffold import SelectedSet
 from core.utils.io import load_toml
+
+
+class SelectedSet(TypedDict):
+    set_name: str
+    version: str
+    description: str
+    nodes: list[Node]
 
 
 @dataclass
 class Registry:
     path: str | Path
     selected_set: str
+
+    
 
     def load(self, filepath: Path, select_set: str) -> SelectedSet:
         # Load data from filepath
