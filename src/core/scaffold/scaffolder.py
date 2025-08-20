@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional, TypedDict, cast
 
 from core.context import Context
+from core.registry import Registry, SelectedSet
 from core.scaffold.node import Node
 from core.utils.io import load_template, load_toml, make_dir, make_file
 
@@ -12,16 +13,11 @@ class MetaData(TypedDict):
     description: str
 
 
-class SelectedSet(TypedDict):
-    set_name: str
-    version: str
-    description: str
-    nodes: list[Node]
-
-
 class Scaffolder:
     def __init__(
-        self, context: Context, template_file: str | Path | None = None
+        self,
+        context: Context,
+        template_file: Optional[str | Path] = None,
     ) -> None:
         self.context = context
         self.meta: MetaData | None = None
@@ -33,6 +29,10 @@ class Scaffolder:
         else:
             template_file = Path(template_file)
             self.template_file = template_file
+
+        self.registry = Registry(
+            path=self.template_file, selected_set=self.context.selected_set
+        )
 
     def create(self, name: str, filepath: Optional[str | Path] = None):
         # Create root directory for project
