@@ -79,7 +79,7 @@ def expected_registry_values(
     set_name: str = "test_set",
     version: str = "0.0.1",
     description: str = "Test scaffold.",
-    nodes: list[Node] = [Node(type="asdf", path="testpath", template="testtemp")],
+    nodes: list[Node] = [Node(type="file", path="testpath", template="testtemp")],
 ) -> SelectedSet:
 
     return SelectedSet(
