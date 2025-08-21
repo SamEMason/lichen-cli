@@ -13,7 +13,7 @@ class MetaData(TypedDict):
     description: str
 
 
-class ScaffoldNoneSet(TypedDict):
+class PreloadedScaffoldSet(TypedDict):
     set_name: str
     version: str | None
     description: str | None
@@ -28,7 +28,8 @@ class Scaffolder:
     ) -> None:
         self.context = context
         self.registry_path = registry_path
-        self.selected_set: ScaffoldSet | ScaffoldNoneSet = ScaffoldNoneSet(
+
+        self.selected_set: ScaffoldSet | PreloadedScaffoldSet = PreloadedScaffoldSet(
             set_name="default", version=None, description=None, nodes=None
         )
 
@@ -44,6 +45,7 @@ class Scaffolder:
             path=self.registry_path, selected_set=self.context.selected_set
         )
 
+    ###### NOTE: THIS NEEDS TO BE UPDATED TO USE CURRENT LIFECYCLE OPEN LOGIC [[ <> ]]
     def create(self, name: str, filepath: Optional[str | Path] = None):
         # Create root directory for project
         target = self._create_project_directory(name)
@@ -54,6 +56,7 @@ class Scaffolder:
         else:
             data_path = self.context.scaffold_file
 
+        ###### NOTE: This.
         scaffolding = load_toml(data_path)
 
         # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
@@ -65,6 +68,7 @@ class Scaffolder:
                 nodes=nodes, location=target, root_dir=self.context.project_root
             )
 
+    ###### NOTE: SAME AS ABOVE NOTE [[ <> ]] :: AS WELL AS RENAMING THIS METHOD TO SOMETHING MORE DESCRIPTIVE
     def apply_nodes(self, nodes: list[dict[str, str]], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
         # Iterate through file tree nodes and create scaffolding
@@ -110,7 +114,6 @@ class Scaffolder:
 
         # Ensure registry_path is of type Path
         path = Path(self.registry_path)
-        print(path)
 
         # Extract data from registry file at location: `filepath``
         extracted_data: ScaffoldSet = self.registry.load(path, select_set=set_name)
@@ -123,8 +126,9 @@ class Scaffolder:
         # Store nodes list into memory
         self.selected_set["nodes"] = extracted_data.get("nodes")
 
-    def save(self, filepath: str | Path, set: ScaffoldSet):
-        path = Path(filepath)
+    def save(self, set: ScaffoldSet):
+        if self.registry_path is None:
+            raise ValueError("Registry path does not exist.")
 
         # Invoke Scaffolder.registry.save with scaffold set data
-        self.registry.save(path, set)
+        self.registry.save(self.registry_path, set)

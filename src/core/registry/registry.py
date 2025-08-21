@@ -86,7 +86,6 @@ class Registry:
         if select_set not in data.keys():
             raise KeyError(f"Selected set `{select_set}` key is invalid.")
 
-        print(data)
         set: ScaffoldSet = data[select_set]
 
         # Get each property within the selected set

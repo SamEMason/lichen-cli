@@ -167,12 +167,12 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     # Copy registry file to tmp_path
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=registry_path)
 
-    scaff = Scaffolder(ctx)
+    scaff = Scaffolder(ctx, registry_path=destination)
 
     expected = expected_scaffold_set_values(version="0.0.2")
 
     # Save the current scaffold to the registry
-    scaff.save(destination, expected)
+    scaff.save(expected)
 
     # Get updated registry data to test save wrote properly
     updated = scaff.registry.load(destination, expected["set_name"])
