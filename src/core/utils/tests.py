@@ -14,7 +14,7 @@ from core.utils.io import write_toml
 
 def run_tests():
     """Run tests using `pytest`"""
-    subprocess.run(["pytest"])
+    subprocess.run(["pytest", "-s"])
 
 
 def get_test_data(filename: str):
@@ -43,6 +43,14 @@ def patch_root_with_tmp_path(
     """Patches find_project_root() with tmp_path fixture"""
     # Force get_project_root() to return isolated tmp_path
     monkeypatch.setattr(f"core.{module}.find_project_root", lambda: tmp_path)
+
+
+###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
+def copy_file_to_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path, source: Path):
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
+
+    # Copy file from source path to tmp_path
+    copyfile(source, tmp_path)
 
 
 def make_test_config(
@@ -91,11 +99,3 @@ def expected_scaffold_set_values(
         description=description,
         nodes=nodes,
     )
-
-
-###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
-def copy_file_to_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path, source: Path):
-    patch_root_with_tmp_path(monkeypatch, tmp_path)
-
-    # Copy file from source path to tmp_path
-    copyfile(source, tmp_path)

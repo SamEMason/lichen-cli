@@ -79,24 +79,20 @@ class Registry:
         file.write("]\n\n")
 
     def load(self, filepath: Path, select_set: str) -> ScaffoldSet:
-        try:
-            # Read raw registry data
-            data = self._read(filepath=filepath)
-        except FileNotFoundError:
-            # Raise error if registry is not found
-            raise FileNotFoundError(f"Registry not found: {filepath}.")
+        # Read raw registry data
+        data = self._read(filepath=filepath)
 
         # Extract selected set from registry data
-        set = data[select_set]
+        if select_set not in data.keys():
+            raise KeyError(f"Selected set `{select_set}` key is invalid.")
+
+        print(data)
+        set: ScaffoldSet = data[select_set]
 
         # Get each property within the selected set
         version = set.get("version")
         description = set.get("description")
         raw_nodes: list[Node] | None = set.get("nodes")
-
-        # Raise exception if raw nodes is NoneType
-        if raw_nodes is None:
-            raise ValueError("Registry data could not be loaded.")
 
         # Extract and normalize nodes as Node type objects
         nodes: list[Node] = [

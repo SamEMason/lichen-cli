@@ -75,7 +75,7 @@ def test_load_loads_registry_meta_data_into_memory(
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     # Instantiate scaffolder object
-    scaff = Scaffolder(ctx)
+    scaff = Scaffolder(ctx, registry_path=destination)
 
     # Expected load data values
     set_name = "test_set"
@@ -86,8 +86,7 @@ def test_load_loads_registry_meta_data_into_memory(
     }
 
     # Load test scaffold from test_registry.toml
-    path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    scaff.load(path, set_name)
+    scaff.load(set_name)
 
     # Assert meta data is not None
     assert scaff.selected_set["set_name"] is not None
@@ -112,7 +111,7 @@ def test_load_loads_nodes_list_into_memory(monkeypatch: MonkeyPatch, tmp_path: P
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     # Instantiate scaffolder object
-    scaff = Scaffolder(ctx)
+    scaff = Scaffolder(ctx, registry_path=destination)
 
     # Expected load data values
     set_name = "test_set"
@@ -130,8 +129,7 @@ def test_load_loads_nodes_list_into_memory(monkeypatch: MonkeyPatch, tmp_path: P
     ]
 
     # Load test scaffold from test_registry.toml
-    path = ctx.test_dir / ".test_data" / "test_registry.toml"
-    scaff.load(path, set_name)
+    scaff.load(set_name)
 
     # Assert selected_set is not None
     assert scaff.selected_set is not None

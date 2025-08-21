@@ -1,4 +1,4 @@
-["test_set"]
+[test_set]
 version = "0.0.1"
 description = "Test scaffold."
 nodes = [
@@ -6,7 +6,7 @@ nodes = [
     { type = "file", path = ".gitignore", template = "test/path/.gitignore" },
 ]
 
-["other_set"]
+[other_set]
 version = "0.0.1"
 description = "Another test scaffold."
 nodes = [

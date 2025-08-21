@@ -104,8 +104,13 @@ class Scaffolder:
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
-    def load(self, filepath: str | Path, set_name: str) -> str | None:
-        path = Path(filepath)
+    def load(self, set_name: str) -> str | None:
+        if self.registry_path is None:
+            raise ValueError("Registry path does not exist.")
+
+        # Ensure registry_path is of type Path
+        path = Path(self.registry_path)
+        print(path)
 
         # Extract data from registry file at location: `filepath``
         extracted_data: ScaffoldSet = self.registry.load(path, select_set=set_name)
