@@ -28,7 +28,6 @@ class Scaffolder:
     ) -> None:
         self.context = context
         self.registry_path = registry_path
-
         self.selected_set: ScaffoldSet | ScaffoldNoneSet = ScaffoldNoneSet(
             set_name="default", version=None, description=None, nodes=None
         )
