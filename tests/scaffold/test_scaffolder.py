@@ -151,7 +151,6 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     # Copy registry file to tmp_path
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=registry_path)
 
-    ###### NOTE: MIGHT NEED TO REINSTANTIATE CTX POST-PATCH
     scaff = Scaffolder(ctx)
 
     expected = expected_scaffold_set_values(version="0.0.2")
