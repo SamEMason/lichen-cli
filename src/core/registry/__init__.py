@@ -1,3 +1,3 @@
-from core.registry.registry import Registry, SelectedSet
+from core.registry.registry import Registry, ScaffoldSet
 
-__all__ = ["Registry", "SelectedSet"]
+__all__ = ["Registry", "ScaffoldSet"]

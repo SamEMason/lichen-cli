@@ -2,7 +2,7 @@ from pathlib import Path
 from pytest import MonkeyPatch, raises
 
 from core.context import Context
-from core.registry import Registry, SelectedSet
+from core.registry import Registry, ScaffoldSet
 from core.utils.tests import (
     copy_file_to_tmp_path,
     expected_scaffold_set_values,
@@ -94,7 +94,7 @@ def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
 
     # Expected values to be written to registry
     set_name = "test_set"
-    expected: SelectedSet = expected_scaffold_set_values(
+    expected: ScaffoldSet = expected_scaffold_set_values(
         set_name=set_name, version="0.0.2", nodes=[]
     )
 
@@ -126,7 +126,7 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
     # Instantiate Context object
     ctx = Context()
 
-    expected_values: SelectedSet = expected_scaffold_set_values(set_name="")
+    expected_values: ScaffoldSet = expected_scaffold_set_values(set_name="")
 
     registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
 
@@ -145,7 +145,7 @@ def test_save_raises_key_error_when_set_name_is_not_valid_key():
     # Instantiate Context object
     ctx = Context()
 
-    expected_values: SelectedSet = expected_scaffold_set_values(set_name="bad_key")
+    expected_values: ScaffoldSet = expected_scaffold_set_values(set_name="bad_key")
 
     registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
 

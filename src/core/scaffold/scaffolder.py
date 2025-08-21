@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Optional, TypedDict
 
 from core.context import Context
-from core.registry import Registry, SelectedSet
+from core.registry import Registry, ScaffoldSet
 from core.scaffold.node import Node
 from core.utils.io import load_template, load_toml, make_dir, make_file
 
@@ -99,7 +99,7 @@ class Scaffolder:
 
         try:
             # Extract data from registry file at location: `filepath``
-            extracted_data: SelectedSet = self.registry.load(path, select_set=set_name)
+            extracted_data: ScaffoldSet = self.registry.load(path, select_set=set_name)
 
         except FileNotFoundError:
             # Raise error if registry is not found
@@ -127,7 +127,7 @@ class Scaffolder:
             # Add node to nodes property stored in memory
             self.nodes.append(new_node)
 
-    def save(self, filepath: str | Path, set: SelectedSet):
+    def save(self, filepath: str | Path, set: ScaffoldSet):
         path = Path(filepath)
 
         # Invoke Scaffolder.registry.save with scaffold set data

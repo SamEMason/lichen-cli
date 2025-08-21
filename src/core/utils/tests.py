@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from core.config import CONFIG_FILENAME
 from core.context import Context
-from core.registry import SelectedSet
+from core.registry import ScaffoldSet
 from core.scaffold import Node
 from core.utils.discovery import find_project_root
 from core.utils.io import write_toml
@@ -81,9 +81,9 @@ def expected_scaffold_set_values(
     version: str = "0.0.1",
     description: str = "Test scaffold.",
     nodes: list[Node] = [Node(type="file", path="testpath", template="testtemp")],
-) -> SelectedSet:
+) -> ScaffoldSet:
 
-    return SelectedSet(
+    return ScaffoldSet(
         set_name=set_name,
         version=version,
         description=description,

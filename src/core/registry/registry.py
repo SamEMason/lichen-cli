@@ -6,7 +6,7 @@ from core.scaffold import Node
 from core.utils.io import load_toml
 
 
-class SelectedSet(TypedDict):
+class ScaffoldSet(TypedDict):
     set_name: str
     version: str
     description: str
@@ -27,7 +27,7 @@ class Registry:
         # Return loaded data from filepath
         return load_toml(filepath)
 
-    def _write(self, filepath: Path, data: dict[str, SelectedSet]):
+    def _write(self, filepath: Path, data: dict[str, ScaffoldSet]):
         # Open registry file for overwriting
         with filepath.open("w", encoding="utf-8") as f:
             # Iterate through each scaffold set in `data` argument
@@ -45,8 +45,8 @@ class Registry:
                     for node in nodes
                 ]
 
-                # Package the current scaffold set data into a SelectedSet object
-                current_set = SelectedSet(
+                # Package the current scaffold set data into a ScaffoldSet object
+                current_set = ScaffoldSet(
                     set_name=set,
                     version=version,
                     description=description,
@@ -56,7 +56,7 @@ class Registry:
                 # Invoke _write_registry_set to write the current set in proper format
                 self._write_registry_set(set=current_set, file=f)
 
-    def _write_registry_set(self, file: TextIO, set: SelectedSet):
+    def _write_registry_set(self, file: TextIO, set: ScaffoldSet):
         # Write the scaffold set name
         file.write(f'["{set["set_name"]}"]\n')
 
@@ -78,7 +78,7 @@ class Registry:
         # Close node list bracket and create space below set
         file.write("]\n\n")
 
-    def load(self, filepath: Path, select_set: str) -> SelectedSet:
+    def load(self, filepath: Path, select_set: str) -> ScaffoldSet:
         # Read raw registry data
         data = self._read(filepath=filepath)
 
@@ -100,15 +100,15 @@ class Registry:
             for node in raw_nodes
         ]
 
-        # Return SelectedSet object
-        return SelectedSet(
+        # Return ScaffoldSet object
+        return ScaffoldSet(
             set_name=select_set,
             version=version,
             description=description,
             nodes=nodes,
         )
 
-    def save(self, registry_path: str | Path, set: SelectedSet):
+    def save(self, registry_path: str | Path, set: ScaffoldSet):
         registry_path = Path(registry_path)
         # Raise error if set_name is an empty string
         if set["set_name"] == "":
