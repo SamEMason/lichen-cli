@@ -47,6 +47,12 @@ class Scaffolder:
             path=self.registry_path, selected_set=self.context.selected_set
         )
 
+        # Extract set_name from selected set
+        set_name = self.selected_set["set_name"]
+
+        # Load registry data from provided file path and set name
+        self.load(filepath=self.registry_path, set_name=set_name)
+
     def create(self, name: str, filepath: Optional[str | Path] = None):
         # Create root directory for project
         target = self._create_project_directory(name)
