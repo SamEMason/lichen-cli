@@ -123,6 +123,7 @@ class Registry:
         if data.get(set_name) is None:
             raise KeyError(f"Set name `{set_name}` is not a valid key.")
 
+        # Update selected set data
         data[set_name] = set
 
         # Overwrite data back onto registry_path with proper formatting

@@ -1,14 +1,12 @@
 from pathlib import Path
 from pytest import MonkeyPatch, raises
-from shutil import copyfile
 
 from core.context import Context
 from core.registry import Registry, SelectedSet
-from core.utils.io import make_file
 from core.utils.tests import (
-    expected_registry_values,
+    copy_file_to_tmp_path,
+    expected_scaffold_set_values,
     registry_arguments,
-    patch_root_with_tmp_path,
 )
 
 
@@ -90,19 +88,13 @@ def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
     registry_file = "test_registry.toml"
     source = ctx.test_dir / ".test_data" / registry_file
-
-    patch_root_with_tmp_path(monkeypatch, tmp_path)
-
-    # Create registry.toml file on tmp_path
-    make_file(tmp_path / registry_file)
-
-    # Copy .test_data/test_registry.toml to new file
     destination = tmp_path / registry_file
-    copyfile(source, destination)
+
+    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     # Expected values to be written to registry
     set_name = "test_set"
-    expected: SelectedSet = expected_registry_values(
+    expected: SelectedSet = expected_scaffold_set_values(
         set_name=set_name, version="0.0.2", nodes=[]
     )
 
@@ -134,7 +126,7 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
     # Instantiate Context object
     ctx = Context()
 
-    expected_values: SelectedSet = expected_registry_values(set_name="")
+    expected_values: SelectedSet = expected_scaffold_set_values(set_name="")
 
     registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
 
@@ -153,7 +145,7 @@ def test_save_raises_key_error_when_set_name_is_not_valid_key():
     # Instantiate Context object
     ctx = Context()
 
-    expected_values: SelectedSet = expected_registry_values(set_name="bad_key")
+    expected_values: SelectedSet = expected_scaffold_set_values(set_name="bad_key")
 
     registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
 

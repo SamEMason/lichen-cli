@@ -1,7 +1,9 @@
 from pathlib import Path
+from pytest import MonkeyPatch
 
 from core.context import Context
 from core.scaffold import Node, Scaffolder
+from core.utils.tests import copy_file_to_tmp_path, expected_scaffold_set_values
 
 
 def test_scaffolder_instantiates_as_type_scaffolder():
@@ -135,3 +137,33 @@ def test_save_is_callable():
 
     # Assert Scaffolder.save is callable
     assert callable(scaff.save)
+
+
+def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path: Path):
+    # Instantiate Context object
+    ctx = Context()
+
+    # Get .test_data/test_registry.toml filepath before patching to tmp_path
+    registry_file = "test_registry.toml"
+    registry_path = ctx.test_dir / ".test_data" / registry_file
+    destination = tmp_path / registry_file
+
+    # Copy registry file to tmp_path
+    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=registry_path)
+
+    ###### NOTE: MIGHT NEED TO REINSTANTIATE CTX POST-PATCH
+    scaff = Scaffolder(ctx)
+
+    expected = expected_scaffold_set_values(version="0.0.2")
+
+    scaff.save(destination, expected)
+
+    updated = scaff.registry.load(destination, expected["set_name"])
+
+    # Assert updated meta data is equivalent to expected meta data values
+    assert updated["set_name"] == expected["set_name"]
+    assert updated["version"] == expected["version"]
+    assert updated["description"] == expected["description"]
+
+    # Assert updated nodes are equivalent to expected nodes values
+    assert updated["nodes"] == expected["nodes"]

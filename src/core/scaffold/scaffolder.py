@@ -127,5 +127,8 @@ class Scaffolder:
             # Add node to nodes property stored in memory
             self.nodes.append(new_node)
 
-    def save(self):
-        pass
+    def save(self, filepath: str | Path, set: SelectedSet):
+        path = Path(filepath)
+
+        # Invoke Scaffolder.registry.save with scaffold set data
+        self.registry.save(path, set)

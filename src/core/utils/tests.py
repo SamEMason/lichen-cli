@@ -1,6 +1,7 @@
 import subprocess
 from pathlib import Path
 from pytest import MonkeyPatch
+from shutil import copyfile
 from typing import Any, Optional
 
 from core.config import CONFIG_FILENAME
@@ -75,7 +76,7 @@ def registry_arguments(
     return path, selected_set
 
 
-def expected_registry_values(
+def expected_scaffold_set_values(
     set_name: str = "test_set",
     version: str = "0.0.1",
     description: str = "Test scaffold.",
@@ -88,3 +89,11 @@ def expected_registry_values(
         description=description,
         nodes=nodes,
     )
+
+
+###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
+def copy_file_to_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path, source: Path):
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
+
+    # Copy file from source path to tmp_path
+    copyfile(source, tmp_path)
