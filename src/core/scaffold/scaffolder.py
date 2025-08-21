@@ -116,9 +116,9 @@ class Scaffolder:
         extracted_data: ScaffoldSet = self.registry.load(path, select_set=set_name)
 
         # Store meta data values in memory
-        self.selected_set["set_name"] = extracted_data.get("set_name", "")
-        self.selected_set["version"] = extracted_data.get("version", "")
-        self.selected_set["description"] = extracted_data.get("description", "")
+        self.selected_set["set_name"] = extracted_data.get("set_name")
+        self.selected_set["version"] = extracted_data.get("version")
+        self.selected_set["description"] = extracted_data.get("description")
 
         # Store nodes list into memory
         self.selected_set["nodes"] = extracted_data.get("nodes")
