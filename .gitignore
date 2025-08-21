@@ -67,3 +67,6 @@ node_modules/
 # Development directories
 temp/
 dev/
+
+# Internal documentation
+notes.md

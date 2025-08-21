@@ -13,6 +13,13 @@ class MetaData(TypedDict):
     description: str
 
 
+class ScaffoldNoneSet(TypedDict):
+    set_name: str
+    version: str | None
+    description: str | None
+    nodes: list[Node] | None
+
+
 class Scaffolder:
     def __init__(
         self,
@@ -20,8 +27,13 @@ class Scaffolder:
         registry_path: Optional[str | Path] = None,
     ) -> None:
         self.context = context
+        self.registry_path = registry_path
         self.meta: MetaData | None = None
         self.nodes: list[Node] = []
+
+        self.selected_set: ScaffoldSet | ScaffoldNoneSet = ScaffoldNoneSet(
+            set_name="default", version=None, description=None, nodes=None
+        )
 
         # If registry_path is not passed in, default to core/scaffold/scaffold.toml
         if registry_path == None:
@@ -30,6 +42,7 @@ class Scaffolder:
             registry_path = Path(registry_path)
             self.registry_path = registry_path
 
+        # Instantiate registry object
         self.registry = Registry(
             path=self.registry_path, selected_set=self.context.selected_set
         )
