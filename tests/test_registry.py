@@ -1,8 +1,15 @@
-from pytest import raises
+from pathlib import Path
+from pytest import MonkeyPatch, raises
+from shutil import copyfile
 
 from core.context import Context
 from core.registry import Registry, SelectedSet
-from core.utils.tests import expected_registry_values, registry_arguments
+from core.utils.io import make_file
+from core.utils.tests import (
+    expected_registry_values,
+    registry_arguments,
+    patch_root_with_tmp_path,
+)
 
 
 def test_registry_instantiates_as_registry():
@@ -76,16 +83,31 @@ def test_save_is_callable():
     assert callable(registry.save)
 
 
-def test_save_writes_meta_data_to_registry():
+def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path: Path):
     # Instantiate Context object
     ctx = Context()
 
+    # Get .test_data/test_registry.toml filepath before patching to tmp_path
+    registry_file = "test_registry.toml"
+    source = ctx.test_dir / ".test_data" / registry_file
+
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
+
+    # Create registry.toml file on tmp_path
+    make_file(tmp_path / registry_file)
+
+    # Copy .test_data/test_registry.toml to new file
+    destination = tmp_path / registry_file
+    copyfile(source, destination)
+
     # Expected values to be written to registry
     set_name = "test_set"
+    expected: SelectedSet = expected_registry_values(
+        set_name=set_name, version="0.0.2", nodes=[]
+    )
 
-    expected: SelectedSet = expected_registry_values(set_name=set_name)
-
-    registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
+    # File path to the registry file
+    registry_path = tmp_path / registry_file
 
     # Initialize Registry arguments
     (path, selected_set) = registry_arguments(path=registry_path)
@@ -103,6 +125,9 @@ def test_save_writes_meta_data_to_registry():
     assert updated["set_name"] == expected["set_name"]
     assert updated["version"] == expected["version"]
     assert updated["description"] == expected["description"]
+
+    # Assert updated nodes are equivalent to expected nodes values
+    assert updated["nodes"] == expected["nodes"]
 
 
 def test_save_raises_value_error_when_set_name_is_empty_string():
@@ -122,6 +147,7 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
     with raises(ValueError):
         # Save expected values to the registry
         registry.save(registry_path=registry_path, set=expected_values)
+
 
 def test_save_raises_key_error_when_set_name_is_not_valid_key():
     # Instantiate Context object
