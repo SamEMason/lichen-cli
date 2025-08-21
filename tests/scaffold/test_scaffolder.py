@@ -61,9 +61,18 @@ def test_load_is_callable():
     assert callable(scaff.load)
 
 
-def test_load_loads_meta_data_from_template():
+def test_load_loads_registry_meta_data_into_memory(
+    monkeypatch: MonkeyPatch, tmp_path: Path
+):
     # Instantiate Context object
     ctx = Context()
+
+    # Get .test_data/test_registry.toml filepath before patching to tmp_path
+    registry_file = "test_registry.toml"
+    source = ctx.test_dir / ".test_data" / registry_file
+    destination = tmp_path / registry_file
+
+    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     # Instantiate scaffolder object
     scaff = Scaffolder(ctx)
@@ -81,17 +90,26 @@ def test_load_loads_meta_data_from_template():
     scaff.load(path, set_name)
 
     # Assert meta data is not None
-    assert scaff.meta is not None
+    assert scaff.selected_set["set_name"] is not None
+    assert scaff.selected_set["version"] is not None
+    assert scaff.selected_set["description"] is not None
 
     # Assert meta data loads into memory
-    assert scaff.meta.get("set_name") == expected_data["set_name"]
-    assert scaff.meta.get("version") == expected_data["version"]
-    assert scaff.meta.get("description") == expected_data["description"]
+    assert scaff.selected_set["set_name"] == expected_data["set_name"]
+    assert scaff.selected_set["version"] == expected_data["version"]
+    assert scaff.selected_set["description"] == expected_data["description"]
 
 
-def test_load_loads_nodes_from_template():
+def test_load_loads_nodes_list_into_memory(monkeypatch: MonkeyPatch, tmp_path: Path):
     # Instantiate Context object
     ctx = Context()
+
+    # Get .test_data/test_registry.toml filepath before patching to tmp_path
+    registry_file = "test_registry.toml"
+    source = ctx.test_dir / ".test_data" / registry_file
+    destination = tmp_path / registry_file
+
+    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     # Instantiate scaffolder object
     scaff = Scaffolder(ctx)
@@ -115,17 +133,17 @@ def test_load_loads_nodes_from_template():
     path = ctx.test_dir / ".test_data" / "test_registry.toml"
     scaff.load(path, set_name)
 
-    # Assert meta data is not None
-    assert scaff.nodes is not None
-
-    # Assert meta data loads into memory
-    nodes = scaff.nodes
+    # Assert selected_set is not None
+    assert scaff.selected_set is not None
 
     # Assert nodes loads into memory
+    nodes = scaff.selected_set["nodes"]
     assert nodes is not None
 
     for i, node in enumerate(nodes):
         assert node["type"] == expected_data[i].type
+        assert node["path"] == expected_data[i].path
+        assert node["template"] == expected_data[i].template
 
 
 def test_save_is_callable():
@@ -155,8 +173,10 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
 
     expected = expected_scaffold_set_values(version="0.0.2")
 
+    # Save the current scaffold to the registry
     scaff.save(destination, expected)
 
+    # Get updated registry data to test save wrote properly
     updated = scaff.registry.load(destination, expected["set_name"])
 
     # Assert updated meta data is equivalent to expected meta data values
@@ -165,4 +185,7 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     assert updated["description"] == expected["description"]
 
     # Assert updated nodes are equivalent to expected nodes values
-    assert updated["nodes"] == expected["nodes"]
+    for i, node in enumerate(updated["nodes"]):
+        assert node.type == expected["nodes"][i].type
+        assert node.path == expected["nodes"][i].path
+        assert node.template == expected["nodes"][i].template

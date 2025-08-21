@@ -28,8 +28,6 @@ class Scaffolder:
     ) -> None:
         self.context = context
         self.registry_path = registry_path
-        self.meta: MetaData | None = None
-        self.nodes: list[Node] = []
 
         self.selected_set: ScaffoldSet | ScaffoldNoneSet = ScaffoldNoneSet(
             set_name="default", version=None, description=None, nodes=None
@@ -114,26 +112,12 @@ class Scaffolder:
         extracted_data: ScaffoldSet = self.registry.load(path, select_set=set_name)
 
         # Store meta data values in memory
-        self.meta = {
-            "set_name": extracted_data.get("set_name", ""),
-            "version": extracted_data.get("version", ""),
-            "description": extracted_data.get("description", ""),
-        }
+        self.selected_set["set_name"] = extracted_data.get("set_name", "")
+        self.selected_set["version"] = extracted_data.get("version", "")
+        self.selected_set["description"] = extracted_data.get("description", "")
 
-        # Select nodes from extracted registry data
-        nodes = extracted_data.get("nodes")
-
-        # Format and store selected nodes
-        for node in nodes:
-            type = node["type"]
-            path = node["path"]
-            template = node["template"]
-
-            # Create new Node type to store node data
-            new_node = Node(type=type, path=path, template=template)
-
-            # Add node to nodes property stored in memory
-            self.nodes.append(new_node)
+        # Store nodes list into memory
+        self.selected_set["nodes"] = extracted_data.get("nodes")
 
     def save(self, filepath: str | Path, set: ScaffoldSet):
         path = Path(filepath)

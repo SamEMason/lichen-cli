@@ -4,12 +4,12 @@ from typing import Any
 
 
 @dataclass
-class Node():
+class Node:
     """Template file tree node"""
 
     type: str
-    path: str | Path
-    template: str | Path
+    path: Path
+    template: Path
 
     def __getitem__(self, key: str):
         return getattr(self, key)

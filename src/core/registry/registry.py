@@ -100,7 +100,11 @@ class Registry:
 
         # Extract and normalize nodes as Node type objects
         nodes: list[Node] = [
-            Node(type=node["type"], path=node["path"], template=node["template"])
+            Node(
+                type=node["type"],
+                path=Path(node["path"]),
+                template=Path(node["template"]),
+            )
             for node in raw_nodes
         ]
 
