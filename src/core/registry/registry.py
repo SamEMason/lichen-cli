@@ -79,8 +79,12 @@ class Registry:
         file.write("]\n\n")
 
     def load(self, filepath: Path, select_set: str) -> ScaffoldSet:
-        # Read raw registry data
-        data = self._read(filepath=filepath)
+        try:
+            # Read raw registry data
+            data = self._read(filepath=filepath)
+        except FileNotFoundError:
+            # Raise error if registry is not found
+            raise FileNotFoundError(f"Registry not found: {filepath}.")
 
         # Extract selected set from registry data
         set = data[select_set]
