@@ -31,11 +31,23 @@ def test_destroy_command(monkeypatch: MonkeyPatch, tmp_path: Path):
 def test_new_command(monkeypatch: MonkeyPatch, tmp_path: Path):
     patch_root_with_tmp_path(monkeypatch, tmp_path)
 
-    # Create Context object instance
+    # Instantiate Context object
     ctx = Context()
 
     # Create scaffold.toml file in tmp_path
-    write_toml(ctx.scaffold_file, {"default": [{"nodes": []}]})
+    write_toml(
+        ctx.scaffold_file,
+        {
+            "default": {
+                "version": "0.0.1",
+                "description": "A test description.",
+                "nodes": [],
+            }
+        },
+    )
 
+    # Invoke the `project new` command
     result = runner.invoke(app, ["project", "new", "test_name"])
+
+    # Assert `project new` command exits cleanly
     assert result.exit_code == 0

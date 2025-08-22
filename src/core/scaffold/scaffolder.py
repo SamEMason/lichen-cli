@@ -1,10 +1,10 @@
 from pathlib import Path
-from typing import Optional, TypedDict
+from typing import Optional, TypedDict, Sequence
 
 from core.context import Context
 from core.registry import Registry, ScaffoldSet
 from core.scaffold.node import Node
-from core.utils.io import load_template, load_toml, make_dir, make_file
+from core.utils.io import load_template, make_dir, make_file
 
 
 class MetaData(TypedDict):
@@ -46,21 +46,17 @@ class Scaffolder:
         )
 
     ###### NOTE: THIS NEEDS TO BE UPDATED TO USE CURRENT LIFECYCLE OPEN LOGIC [[ <> ]]
-    def create(self, name: str, filepath: Optional[str | Path] = None):
+    def create(self, name: str):
         # Create root directory for project
         target = self._create_project_directory(name)
 
-        # Load scaffolding nodes from scaffold.toml
-        if filepath is not None:
-            data_path = filepath
-        else:
-            data_path = self.context.scaffold_file
+        set_name = self.selected_set["set_name"]
+        self.load(set_name=set_name)
 
-        ###### NOTE: This.
-        scaffolding = load_toml(data_path)
+        nodes = self.selected_set["nodes"]
 
-        # NOTE: THIS LOGIC WILL NEED TO BE GENERALIZED WHEN CUSTOM SCAFFOLDS EXIST
-        nodes = scaffolding["default"][0]["nodes"]
+        if nodes is None:
+            raise ValueError("Nodes were not loaded properly.")
 
         if self.context.project_root is not None:
             # Build out project structure at target location with nodes
@@ -69,7 +65,7 @@ class Scaffolder:
             )
 
     ###### NOTE: SAME AS ABOVE NOTE [[ <> ]] :: AS WELL AS RENAMING THIS METHOD TO SOMETHING MORE DESCRIPTIVE
-    def apply_nodes(self, nodes: list[dict[str, str]], location: Path, root_dir: Path):
+    def apply_nodes(self, nodes: Sequence[Node], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
         # Iterate through file tree nodes and create scaffolding
         for node in nodes:
@@ -81,7 +77,7 @@ class Scaffolder:
                 make_dir(target)
 
             elif node_type == "file":
-                has_template = bool(node.get("template"))
+                has_template = bool(node["template"])
                 is_toml = Path(target).suffix == ".toml"
 
                 # If file is of type TOML, load template contents and use write_toml

@@ -13,6 +13,12 @@ class ScaffoldSet(TypedDict):
     nodes: list[Node]
 
 
+class RawNode(TypedDict):
+    type: str
+    path: str | Path
+    template: str | Path
+
+
 @dataclass
 class Registry:
     path: str | Path
@@ -33,9 +39,9 @@ class Registry:
             # Iterate through each scaffold set in `data` argument
             for set, props in data.items():
                 # Extract meta data and nodes from scaffold set data
-                version = props.get("version")
-                description = props.get("description")
-                nodes = props.get("nodes")
+                version = props["version"]
+                description = props["description"]
+                nodes = props["nodes"]
 
                 # Convert extracted nodes into Node objects
                 current_node_list = [
@@ -83,15 +89,15 @@ class Registry:
         data = self._read(filepath=filepath)
 
         # Extract selected set from registry data
-        if select_set not in data.keys():
+        if select_set not in data:
             raise KeyError(f"Selected set `{select_set}` key is invalid.")
 
-        set: ScaffoldSet = data[select_set]
+        selected_set: dict[str, Any] = data[select_set]
 
         # Get each property within the selected set
-        version = set.get("version")
-        description = set.get("description")
-        raw_nodes: list[Node] | None = set.get("nodes")
+        version = selected_set["version"]
+        description = selected_set["description"]
+        raw_nodes: list[RawNode] = selected_set["nodes"] or []
 
         # Extract and normalize nodes as Node type objects
         nodes: list[Node] = [

@@ -47,10 +47,10 @@ def patch_root_with_tmp_path(
 
 ###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
 def copy_file_to_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path, source: Path):
-    patch_root_with_tmp_path(monkeypatch, tmp_path)
-
     # Copy file from source path to tmp_path
     copyfile(source, tmp_path)
+
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
 
 def make_test_config(

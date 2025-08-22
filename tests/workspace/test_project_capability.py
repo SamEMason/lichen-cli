@@ -2,7 +2,7 @@ from pathlib import Path
 from pytest import MonkeyPatch
 
 import core.context as ctx_mod
-from core.utils.io import make_dir
+from core.utils.io import make_dir, make_file
 from core.workspace import ProjectCapability, Workspace
 
 
@@ -36,13 +36,19 @@ def test_project_new_method_creates_project_directory_inside_tmp_dir_when_root_i
     scaffold_dir = ws.context.scaffold_dir
     scaffold_dir.mkdir(parents=True)
 
+    template_path = tmp_path / "test.template"
+    make_file(path=template_path, content="A test template.")
+
     # Minimal scaffold.toml that apply_nodes can handle
     ws.context.scaffold_file.write_text(
         """
-        [[default]]
-        [[default.nodes]]
-        type = "file"
-        path = "test.md"
+        [default]
+        version = "0.0.1"
+        description = "Absolute MVP Lichen Stack file tree."
+        nodes = [
+            { type = "file", path = "test.md", template = "test.template" }
+        ]
+
         """.strip()
     )
 
@@ -82,13 +88,19 @@ def test_project_new_method_creates_project_directory_without_tmp_dir_when_root_
     scaffold_dir = ws.context.scaffold_dir
     scaffold_dir.mkdir(parents=True)
 
+    template_path = root_path / "test.template"
+    make_file(path=template_path, content="A test template.")
+
     # Minimal scaffold.toml that apply_nodes can handle
     ws.context.scaffold_file.write_text(
         """
-        [[default]]
-        [[default.nodes]]
-        type = "file"
-        path = "test.md"
+        [default]
+        version = "0.0.1"
+        description = "Absolute MVP Lichen Stack file tree."
+        nodes = [
+            { type = "file", path = "test.md", template = "test.template" }
+        ]
+
         """.strip()
     )
 
