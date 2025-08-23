@@ -1,32 +1,6 @@
-[[templater]]
+[default]
 version = "0.0.1"
 description = "Customizable templating engine."
-
-[[templater.nodes]]
-type = "file"
-path = ".gitignore"
-template = "src/client_build/templates/.gitignore"
-
-[[templater.nodes]]
-type = "file"
-path = "templates.toml"
-template = "src/client_build/templates/templates.toml"
-
-
-[[templater.nodes]]
-type = "file"
-path = "config.toml"
-template = "src/client_build/templates/config.toml"
-
-[[templater.nodes]]
-type = "file"
-path = "utils.py"
-template = "src/client_build/templates/utils.py"
-
-[[templater.nodes]]
-type = "dir"
-path = "bin"
-
-[[templater.nodes]]
-type = "dir"
-path = "templates/cli_base"
+nodes = [
+    { type = "file", path = ".gitignore", template = "src/client_build/scaffolds/.gitignore" },
+]

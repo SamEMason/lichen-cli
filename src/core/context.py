@@ -118,7 +118,7 @@ class Context:
         return None
 
     @property
-    def client_build_templates_dir(self) -> Path | None:
+    def client_build_scaffolds_dir(self) -> Path | None:
         if self.client_build_dir is not None:
             path = Path(self.client_build_dir / "scaffolds")
 
