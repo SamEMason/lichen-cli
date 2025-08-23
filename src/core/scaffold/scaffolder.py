@@ -45,16 +45,18 @@ class Scaffolder:
             path=self.registry_path, selected_set=self.context.selected_set
         )
 
-    ###### NOTE: THIS NEEDS TO BE UPDATED TO USE CURRENT LIFECYCLE OPEN LOGIC [[ <> ]]
     def create(self, name: str):
         # Create root directory for project
         target = self._create_project_directory(name)
 
+        # Load the selected set from the registry into memory
         set_name = self.selected_set["set_name"]
         self.load(set_name=set_name)
 
+        # Extract the nodes from the selected set in memory
         nodes = self.selected_set["nodes"]
 
+        # Raise a ValueError if the nodes we're loaded as None
         if nodes is None:
             raise ValueError("Nodes were not loaded properly.")
 
@@ -64,33 +66,42 @@ class Scaffolder:
                 nodes=nodes, location=target, root_dir=self.context.project_root
             )
 
-    ###### NOTE: SAME AS ABOVE NOTE [[ <> ]] :: AS WELL AS RENAMING THIS METHOD TO SOMETHING MORE DESCRIPTIVE
     def apply_nodes(self, nodes: Sequence[Node], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
         # Iterate through file tree nodes and create scaffolding
         for node in nodes:
             node_type = node["type"]
             relative_path = node["path"]
+
+            ###### NOTE: SHOULD VALIDATE THAT THE PATHS ARE RELATIVE HERE
+
+            # Resolve target path from root scaffold directory
             target = location / relative_path
 
+            # If node type is "dir" create a directory
             if node_type == "dir":
                 make_dir(target)
 
+            # Else if node type is "file" create a file
             elif node_type == "file":
                 has_template = bool(node["template"])
                 is_toml = Path(target).suffix == ".toml"
 
-                # If file is of type TOML, load template contents and use write_toml
+                # If file is of type TOML load template contents and use write_toml
                 if is_toml and has_template:
                     content = load_template(root_dir / node["template"])
+
+                    # If the template is empty use an empty string as content
                     if not content:
                         content = ""
                     make_file(target, content=content)
 
+                # If file is not of type TOML but has template create file copying from template file
                 elif has_template:
                     with open(root_dir / node["template"]) as file:
                         make_file(target, content=file.read())
 
+                # In all other cases create an empty file
                 else:
                     make_file(target)
 
