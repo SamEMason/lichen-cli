@@ -1,6 +1,7 @@
 from pathlib import Path
 
-def find_project_root() -> Path:
+
+def find_lichen_root() -> Path:
     start = Path(__file__).resolve()
 
     for parent in start.parents:

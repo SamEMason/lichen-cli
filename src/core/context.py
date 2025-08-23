@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from core.config import Config, ALLOWED_KEYS, CONFIG_FILENAME
-from core.utils.discovery import find_project_root
+from core.utils.discovery import find_lichen_root
 from core.utils.io import load_toml, write_toml
 
 
@@ -18,7 +18,7 @@ class Context:
 
     def __post_init__(self):
         if self.project_root is None:
-            self.project_root = find_project_root()
+            self.project_root = find_lichen_root()
 
     # Internal guard
     def _root(self) -> Path:
@@ -54,7 +54,7 @@ class Context:
             raise KeyError(f"Unknown key: {key}.")
 
         # Get project root directory to write config
-        project_root = find_project_root()
+        project_root = find_lichen_root()
         config_location = project_root / CONFIG_FILENAME
 
         # If config.toml doesn't exist, create empty dictionary
