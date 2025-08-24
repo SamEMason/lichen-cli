@@ -87,7 +87,13 @@ def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
     registry_file = "test_registry.toml"
-    source = ctx.test_dir / ".test_data" / registry_file
+
+    if ctx.project_root is None:
+        raise ValueError("Project root not initialized.")
+
+    test_dir = ctx.project_root / "tests"
+    source = test_dir / ".test_data" / registry_file
+
     destination = tmp_path / registry_file
 
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
@@ -128,7 +134,10 @@ def test_save_raises_value_error_when_set_name_is_empty_string():
 
     expected_values: ScaffoldSet = expected_scaffold_set_values(set_name="")
 
-    registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
+    if ctx.project_root is None:
+        raise ValueError("Project root not initialized.")
+
+    registry_path = ctx.project_root / "tests" / ".test_data" / "test_registry.toml"
 
     # Initialize Registry arguments
     (path, selected_set) = registry_arguments(path=registry_path)
@@ -147,13 +156,17 @@ def test_save_raises_key_error_when_set_name_is_not_valid_key():
 
     expected_values: ScaffoldSet = expected_scaffold_set_values(set_name="bad_key")
 
-    registry_path = ctx.test_dir / ".test_data" / "test_registry.toml"
-
     # Initialize Registry arguments
-    (path, selected_set) = registry_arguments(path=registry_path)
+    (path, selected_set) = registry_arguments()
 
     # Instantiate Context object
     registry = Registry(path, selected_set)
+
+    assert ctx.project_root is not None
+
+    registry_path = ctx.project_root / "tests" / ".test_data" / "test_registry.toml"
+
+    assert registry_path is not None
 
     with raises(KeyError):
         # Save expected values to the registry

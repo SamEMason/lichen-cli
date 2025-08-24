@@ -26,7 +26,7 @@ def test_workspace_context_instantiates_as_passed_in_context(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.context.find_tool_root", lambda: tmp_path)
 
     modified_key = "project_name"
     modified_value = "test_project"
@@ -49,7 +49,7 @@ def test_workspace_context_instantiates_default_without_passed_in_context(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("core.context.find_project_root", lambda: tmp_path)
+    monkeypatch.setattr("core.context.find_tool_root", lambda: tmp_path)
 
     expected_key = "project_name"
     expected_value = None

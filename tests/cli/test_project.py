@@ -34,9 +34,14 @@ def test_new_command(monkeypatch: MonkeyPatch, tmp_path: Path):
     # Instantiate Context object
     ctx = Context()
 
-    # Create scaffold.toml file in tmp_path
+    # Create temporary scaffold.toml file within tmp_path
+    if ctx.project_root is None:
+        raise ValueError("Registry file path was not initialized.")
+
+    registry_path = ctx.project_root / "src/core/scaffold/scaffold.toml"
+
     write_toml(
-        ctx.scaffold_file,
+        registry_path,
         {
             "default": {
                 "version": "0.0.1",

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def find_lichen_root() -> Path:
+def find_tool_root() -> Path:
     start = Path(__file__).resolve()
 
     for parent in start.parents:

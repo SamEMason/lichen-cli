@@ -19,8 +19,9 @@ class ProjectCapability(BaseCapability):
 
     def decimate(self) -> str:
         """Absolutely decimate the tmp_dir/ directory"""
-        temp_path = self.context.temporary_dir
+        assert self.context.project_root is not None
         tmp_dir = self.context.config.tmp_dir
+        temp_path = self.context.project_root / tmp_dir
 
         if temp_path and temp_path.exists() and temp_path.is_dir():
             rmtree(temp_path)
@@ -30,7 +31,7 @@ class ProjectCapability(BaseCapability):
 
     def destroy(self, name: str):
         """Destroy the specified lichen monorepo project"""  # NOTE: REFACTOR -> WRAP RMTREE
-        cwd = self.context.cwd
+        cwd = self.context.working_root
         root = self.context.project_root
 
         if cwd == root:
@@ -38,7 +39,7 @@ class ProjectCapability(BaseCapability):
         else:
             target = name
 
-        path = self.context.path_from_cmd(target)
+        path = self.context.working_root / target
 
         if path.exists() and path.is_dir():
             rmtree(path)

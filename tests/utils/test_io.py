@@ -1,5 +1,5 @@
 from pathlib import Path
-from core.utils.discovery import find_project_root
+from core.utils.discovery import find_tool_root
 from core.utils.io import (
     load_toml,
     make_dir,
@@ -9,12 +9,12 @@ from core.utils.io import (
 from core.utils.tests import get_test_data
 
 
-def test_find_project_root():
+def test_find_tool_root():
     # File in root
     root_file = "pyproject.toml"
 
-    # Get project root using find_project_root
-    project_root = find_project_root()
+    # Get project root using find_tool_root
+    project_root = find_tool_root()
 
     assert isinstance(project_root, Path)
 

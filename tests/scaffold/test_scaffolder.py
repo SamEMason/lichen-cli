@@ -65,11 +65,15 @@ def test_load_loads_registry_meta_data_into_memory(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
     # Instantiate Context object
+
     ctx = Context()
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
+
+    assert ctx.project_root is not None
+
     registry_file = "test_registry.toml"
-    source = ctx.test_dir / ".test_data" / registry_file
+    source = ctx.project_root / "tests" / ".test_data" / registry_file
     destination = tmp_path / registry_file
 
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
@@ -79,7 +83,8 @@ def test_load_loads_registry_meta_data_into_memory(
 
     # Expected load data values
     set_name = "test_set"
-    expected_data: dict[str, str | list[Node]] = {
+
+    expected_data: dict[str, str] = {
         "set_name": set_name,
         "version": "0.0.1",
         "description": "Test scaffold.",
@@ -105,7 +110,10 @@ def test_load_loads_nodes_list_into_memory(monkeypatch: MonkeyPatch, tmp_path: P
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
     registry_file = "test_registry.toml"
-    source = ctx.test_dir / ".test_data" / registry_file
+
+    assert ctx.project_root is not None
+
+    source = ctx.project_root / "tests" / ".test_data" / registry_file
     destination = tmp_path / registry_file
 
     copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
@@ -161,11 +169,14 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
     registry_file = "test_registry.toml"
-    registry_path = ctx.test_dir / ".test_data" / registry_file
+
+    assert ctx.project_root is not None
+
+    source = ctx.project_root / "tests" / ".test_data" / registry_file
     destination = tmp_path / registry_file
 
     # Copy registry file to tmp_path
-    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=registry_path)
+    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=source)
 
     scaff = Scaffolder(ctx, registry_path=destination)
 

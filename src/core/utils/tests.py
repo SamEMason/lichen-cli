@@ -8,7 +8,7 @@ from core.config import CONFIG_FILENAME
 from core.context import Context
 from core.registry import ScaffoldSet
 from core.scaffold import Node
-from core.utils.discovery import find_project_root
+from core.utils.discovery import find_tool_root
 from core.utils.io import write_toml
 
 
@@ -19,7 +19,7 @@ def run_tests():
 
 def get_test_data(filename: str):
     """Retrieve absolute filepath for test data files"""
-    root = find_project_root()
+    root = find_tool_root()
     relative_path = "tests/.test_data"
     target = root / relative_path / filename
 
@@ -40,9 +40,9 @@ def get_test_data(filename: str):
 def patch_root_with_tmp_path(
     monkeypatch: MonkeyPatch, tmp_path: Path, module: str = "context"
 ):
-    """Patches find_project_root() with tmp_path fixture"""
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr(f"core.{module}.find_project_root", lambda: tmp_path)
+    """Patches find_tool_root() with tmp_path fixture"""
+    # Force find_tool_root() to return isolated tmp_path
+    monkeypatch.setattr(f"core.{module}.find_tool_root", lambda: tmp_path)
 
 
 ###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
@@ -71,9 +71,12 @@ def registry_arguments(
 
     ctx = Context()
 
+    if ctx.project_root is None:
+        raise ValueError("Project root was not initialized.")
+
     # Instatiate registry file path with default value if None
     if path is None:
-        path = ctx.test_dir / ".test_data" / "test_registry.toml"
+        path = ctx.project_root / "tests" / ".test_data" / "test_registry.toml"
     else:
         path = Path(path)
 

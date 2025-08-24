@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from core.config import Config, ALLOWED_KEYS, CONFIG_FILENAME
-from core.utils.discovery import find_lichen_root
+from core.utils.discovery import find_tool_root
 from core.utils.io import load_toml, write_toml
 
 
@@ -14,21 +14,20 @@ ENV_SECTION = "dev"
 class Context:
     config: Config = field(default_factory=Config)
     project_root: Optional[Path] = None
+    working_root: Path = field(default_factory=Path.cwd)
     selected_set: str = "default"
 
     def __post_init__(self):
         if self.project_root is None:
-            self.project_root = find_lichen_root()
-
-    # Internal guard
-    def _root(self) -> Path:
-        assert self.project_root is not None
-        return self.project_root
+            self.project_root = find_tool_root()
 
     # Config lifecycle methods
     def load_config(self):
         # Get project root directory to write config
-        config_location = self._root() / CONFIG_FILENAME
+        if self.project_root is None:
+            raise ValueError("Project root was not initialized.")
+
+        config_location = self.project_root / CONFIG_FILENAME
 
         if not config_location.exists():
             return
@@ -54,7 +53,7 @@ class Context:
             raise KeyError(f"Unknown key: {key}.")
 
         # Get project root directory to write config
-        project_root = find_lichen_root()
+        project_root = find_tool_root()
         config_location = project_root / CONFIG_FILENAME
 
         # If config.toml doesn't exist, create empty dictionary
@@ -71,68 +70,3 @@ class Context:
 
         # Overwrite config.toml with updated configs
         write_toml(config_location, content=configs)
-
-    # Canonical paths (callers should use these)
-    @property
-    def config_file(self) -> Path:
-        return self._root() / CONFIG_FILENAME
-
-    @property
-    def test_dir(self):
-        return self._root() / "tests"
-
-    @property
-    def scaffold_dir(self):
-        return self._root() / "src" / "core" / "scaffold"
-
-    @property
-    def scaffold_file(self):
-        return self.scaffold_dir / "scaffold.toml"
-
-    @property
-    def templates_dir(self):
-        return self.scaffold_dir / "templates"
-
-    @property
-    def temporary_dir(self) -> Path | None:
-        if self.project_root is not None:
-            path = Path(self.project_root / self.config.tmp_dir)
-
-            if path.exists():
-                return self.get_absolute(path)
-
-        return None
-
-    @property
-    def cwd(self) -> Path:
-        return Path.cwd()
-
-    @property
-    def client_build_dir(self) -> Path | None:
-        if self.project_root is not None:
-            path = Path(self.project_root / "src" / "client_build")
-
-            if path.exists():
-                return self.get_absolute(path)
-
-        return None
-
-    @property
-    def client_build_scaffolds_dir(self) -> Path | None:
-        if self.client_build_dir is not None:
-            path = Path(self.client_build_dir / "scaffolds")
-
-            if path.exists():
-                return self.get_absolute(path)
-
-        return None
-
-    def path_from_cmd(self, filepath: str | Path) -> Path:
-        return self.cwd / filepath
-
-    def get_absolute(self, filepath: str | Path) -> Path:
-        """Return absolute path under the project root."""
-        path = Path(filepath).expanduser()
-        if path.is_absolute():
-            return path.resolve()
-        return (self._root() / filepath).resolve()

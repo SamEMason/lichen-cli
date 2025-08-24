@@ -11,11 +11,12 @@ app = Typer()
 def version():
     ctx = Context()
 
-    if ctx.client_build_dir is None:
-        raise NotADirectoryError("Client_build directory not found.")
+    if ctx.project_root is None:
+        raise ValueError("Project root was not initialized.")
 
-    path = ctx.client_build_dir / ".scaffold" / "meta.toml"
-    data = load_toml(path)
+    meta_file = ctx.project_root / ".scaffold" / "meta.toml"
+
+    data = load_toml(meta_file)
 
     version = data.get("version", "unknown")
 

@@ -21,7 +21,7 @@ class RawNode(TypedDict):
 
 @dataclass
 class Registry:
-    path: str | Path
+    path: Path
     selected_set: str
 
     def _read(self, filepath: Path) -> dict[str, Any]:

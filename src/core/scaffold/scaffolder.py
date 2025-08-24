@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Optional, TypedDict, Sequence
+from typing import Optional, Sequence, TypedDict
 
 from core.context import Context
 from core.registry import Registry, ScaffoldSet
@@ -21,23 +21,23 @@ class PreloadedScaffoldSet(TypedDict):
 
 
 class Scaffolder:
-    def __init__(
-        self,
-        context: Context,
-        registry_path: Optional[str | Path] = None,
-    ) -> None:
-        self.context = context
-        self.registry_path = registry_path
-
+    def __init__(self, context: Context, registry_path: Optional[Path] = None) -> None:
+        self.context: Context = context
+        self.registry_path: Optional[Path] = None
         self.selected_set: ScaffoldSet | PreloadedScaffoldSet = PreloadedScaffoldSet(
             set_name="default", version=None, description=None, nodes=None
         )
 
-        # If registry_path is not passed in, default to core/scaffold/scaffold.toml
-        if registry_path == None:
-            self.registry_path = self.context.scaffold_file
+        # Create temporary scaffold.toml file within tmp_path
+        if registry_path is None:
+            if self.context.project_root is None:
+                raise ValueError("Project root is not initialized.")
+
+            self.registry_path = (
+                self.context.project_root / "src/core/scaffold/scaffold.toml"
+            )
+
         else:
-            registry_path = Path(registry_path)
             self.registry_path = registry_path
 
         # Instantiate registry object
@@ -108,7 +108,7 @@ class Scaffolder:
     def _create_project_directory(self, name: str) -> Path:
         # Root and current working directory
         root = self.context.project_root
-        cwd = self.context.cwd
+        cwd = self.context.working_root
 
         # Create a temporary directory around new project if cwd is the root
         if cwd == root:
