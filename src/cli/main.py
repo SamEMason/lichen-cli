@@ -1,8 +1,8 @@
 from typer import Typer
-from cli.dev import app as dev_app
-from cli.project import app as project_app
-from cli.service import app as service_app
-from cli.test import app as test_app
+from cli.commands.dev import app as dev_app
+from cli.commands.project import app as project_app
+from cli.commands.service import app as service_app
+from cli.commands.test import app as test_app
 
 
 app = Typer()
