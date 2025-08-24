@@ -3,7 +3,7 @@ from shutil import rmtree
 from core.constants.cli.project import BUILD_OUTPUT, decimate_fail, decimate_success
 from core.context import Context
 from core.scaffold import Scaffolder
-from core.workspace.base import BaseCapability
+from cli.workspace.base import BaseCapability
 
 
 class ProjectCapability(BaseCapability):

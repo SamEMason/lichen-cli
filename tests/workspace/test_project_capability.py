@@ -1,4 +1,4 @@
-from core.workspace import ProjectCapability, Workspace
+from cli.workspace import ProjectCapability, Workspace
 
 
 def test_project_instantiates_as_type_project_capability():

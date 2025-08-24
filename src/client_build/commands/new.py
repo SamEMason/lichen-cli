@@ -1,6 +1,6 @@
 from typer import Typer
 
-from core.workspace import Workspace
+from cli.workspace import Workspace
 
 
 app = Typer()

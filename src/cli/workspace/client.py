@@ -1,6 +1,6 @@
 from core.context import Context
 from core.scaffold import Scaffolder
-from core.workspace.base import BaseCapability
+from cli.workspace.base import BaseCapability
 
 
 class ClientCapability(BaseCapability):

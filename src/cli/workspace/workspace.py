@@ -1,6 +1,6 @@
 from core.context import Context
-from core.workspace.client import ClientCapability
-from core.workspace.project import ProjectCapability
+from cli.workspace.client import ClientCapability
+from cli.workspace.project import ProjectCapability
 
 
 class Workspace:

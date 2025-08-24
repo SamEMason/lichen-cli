@@ -1,8 +1,8 @@
 from pathlib import Path
 from pytest import MonkeyPatch
 
+from cli.workspace import Workspace
 from core.context import Context
-from core.workspace import Workspace
 from core.utils.tests import make_test_config
 
 

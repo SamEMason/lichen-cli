@@ -1,5 +1,5 @@
-from core.workspace.client import ClientCapability
-from core.workspace import Workspace
+from cli.workspace.client import ClientCapability
+from cli.workspace import Workspace
 
 
 def test_project_instantiates_as_type_client_capability():
