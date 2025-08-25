@@ -1,0 +1,29 @@
+[default]
+version = "0.0.1"
+description = "Absolute MVP Lichen Stack file tree."
+nodes = [
+    { type = "file", path = ".lichen/registry.toml", template = "scaffolds/default/.lichen_registry.template" },
+    { type = "file", path = ".gitignore", template = "scaffolds/default/.gitignore.template" },
+    { type = "file", path = ".env.example", template = "scaffolds/default/.env.example.template" },
+    { type = "file", path = "pyproject.toml", template = "scaffolds/default/pyproject.template" },
+    { type = "file", path = "requirements.txt", template = "scaffolds/default/requirements.template" },
+    { type = "file", path = "README.md", template = "scaffolds/default/README.template" },
+    { type = "file", path = "global.config.toml", template = "scaffolds/default/global.config.template" },
+
+    # Gateway Service
+    { type = "file", path = "services/gateway/src/main.py", template = "scaffolds/default/services/gateway/src_main.template" },
+    { type = "file", path = "services/gateway/src/routes.py", template = "scaffolds/default/services/gateway/src_routes.template" },
+    { type = "file", path = "services/gateway/requirements.txt", template = "scaffolds/default/services/gateway/requirements.template" },
+    { type = "file", path = "services/gateway/local.config.toml", template = "scaffolds/default/services/gateway/local.config.template" },
+    { type = "file", path = "services/gateway/.env.example", template = "scaffolds/default/services/gateway/.env.example.template" },
+
+    # Worker Service
+    { type = "file", path = "services/worker/src/main.py", template = "scaffolds/default/services/worker/src_main.template" },
+    { type = "file", path = "services/worker/requirements.txt", template = "scaffolds/default/services/worker/requirements.template" },
+    { type = "file", path = "services/worker/local.config.toml", template = "scaffolds/default/services/worker/local.config.template" },
+    { type = "file", path = "services/worker/.env.example", template = "scaffolds/default/services/worker/.env.example.template" },
+
+    # Shared modules
+    { type = "file", path = "shared/utils.py", template = "scaffolds/default/shared/utils.template" },
+    { type = "file", path = "shared/logging.py", template = "scaffolds/default/shared/logging.template" },
+]

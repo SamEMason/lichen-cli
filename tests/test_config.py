@@ -1,4 +1,4 @@
-from core.config import Config, DEFAULT_CONFIGS
+from lichen_core.config import Config, DEFAULT_CONFIGS
 
 
 def test_config_instantiates_with_defaults():

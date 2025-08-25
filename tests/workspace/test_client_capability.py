@@ -1,5 +1,5 @@
-from cli.workspace.client import ClientCapability
-from cli.workspace import Workspace
+from lichen_cli.workspace.client import ClientCapability
+from lichen_cli.workspace import Workspace
 
 
 def test_project_instantiates_as_type_client_capability():

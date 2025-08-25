@@ -2,10 +2,10 @@ from pathlib import Path
 from pytest import MonkeyPatch
 from typer.testing import CliRunner
 
-from core.context import Context
-from core.utils.io import write_toml
-from core.utils.tests import patch_root_with_tmp_path
-from cli.main import app
+from lichen_core.context import Context
+from lichen_core.utils.io import write_toml
+from lichen_cli.main import app
+from tests.utils import patch_root_with_tmp_path
 
 runner = CliRunner()
 
@@ -38,7 +38,8 @@ def test_new_command(monkeypatch: MonkeyPatch, tmp_path: Path):
     if ctx.project_root is None:
         raise ValueError("Registry file path was not initialized.")
 
-    registry_path = ctx.project_root / "src/core/scaffold/scaffold.toml"
+    registry_path = ctx.project_root / ".scaffold/registry.toml"
+    print(registry_path)
 
     write_toml(
         registry_path,

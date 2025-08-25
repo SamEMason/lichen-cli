@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from core.scaffold.node import Node
+from lichen_core.scaffold.node import Node
 
 
 def test_node_instantiates_as_type_node():

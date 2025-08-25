@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scaffold"
+version = "0.0.1"
+dependencies = ["lichen-core>=0.0.1"]
+
+[project.scripts]
+scaffold = "scaffold.main:app"
+
+[tool.setuptools]
+package-dir = { "" = "." }
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scaffold*"]
+
