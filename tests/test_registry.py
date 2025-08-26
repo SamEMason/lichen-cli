@@ -6,12 +6,9 @@ from lichen_core.registry import Registry, ScaffoldSet
 from tests.utils import (
     copy_file_to_tmp_path,
     expected_scaffold_set_values,
+    get_registry_path,
     registry_arguments,
-    path_to_test_data,
 )
-
-
-REGISTRY_PATH = path_to_test_data("test_registry.toml")
 
 
 def test_registry_instantiates_as_registry():
@@ -86,18 +83,13 @@ def test_save_is_callable():
 
 
 def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path: Path):
-    # Instantiate Context object
-    ctx = Context()
-
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
-    registry_file = "test_registry.toml"
+    registry_path = get_registry_path()
+    destination = tmp_path / ".scaffold" / "registry.toml"
 
-    if ctx.project_root is None:
-        raise ValueError("Project root not initialized.")
-
-    destination = tmp_path / registry_file
-
-    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=REGISTRY_PATH)
+    copy_file_to_tmp_path(
+        monkeypatch, tmp_path=destination, source=registry_path, dest=destination
+    )
 
     # Expected values to be written to registry
     set_name = "test_set"
@@ -106,7 +98,7 @@ def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     )
 
     # File path to the registry file
-    registry_path = tmp_path / registry_file
+    registry_path = tmp_path / ".scaffold" / "registry.toml"
 
     # Initialize Registry arguments
     (path, selected_set) = registry_arguments(path=registry_path)
@@ -130,15 +122,9 @@ def test_save_writes_updated_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
 
 
 def test_save_raises_value_error_when_set_name_is_empty_string():
-    # Instantiate Context object
-    ctx = Context()
-
     expected_values: ScaffoldSet = expected_scaffold_set_values(set_name="")
 
-    if ctx.project_root is None:
-        raise ValueError("Project root not initialized.")
-
-    registry_path = ctx.project_root / "tests" / ".test_data" / "test_registry.toml"
+    registry_path = get_registry_path()
 
     # Initialize Registry arguments
     (path, selected_set) = registry_arguments(path=registry_path)
@@ -159,14 +145,14 @@ def test_save_raises_key_error_when_set_name_is_not_valid_key():
 
     # Initialize Registry arguments
     (path, selected_set) = registry_arguments()
+    registry_path = get_registry_path()
 
     # Instantiate Context object
     registry = Registry(path, selected_set)
 
     assert ctx.project_root is not None
 
-    assert REGISTRY_PATH is not None
 
     with raises(KeyError):
         # Save expected values to the registry
-        registry.save(registry_path=REGISTRY_PATH, set=expected_values)
+        registry.save(registry_path=registry_path, set=expected_values)

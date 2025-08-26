@@ -3,8 +3,11 @@ from pytest import MonkeyPatch
 from typer.testing import CliRunner
 
 from lichen_cli.main import app
-from lichen_cli.utils import find_tool_root
-from tests.utils import copy_file_to_tmp_path, patch_root_with_tmp_path
+from tests.utils import (
+    copy_file_to_tmp_path,
+    get_registry_path,
+    patch_root_with_tmp_path,
+)
 
 runner = CliRunner()
 
@@ -28,14 +31,14 @@ def test_destroy_command(monkeypatch: MonkeyPatch, tmp_path: Path):
 
 
 def test_new_command(monkeypatch: MonkeyPatch, tmp_path: Path):
-    lichen_root = find_tool_root().parent.parent
-
     # Get test_registry.toml from tests dir
-    registry_path = lichen_root / "tests" / ".test_data" / "test_registry.toml"
+    registry_path = get_registry_path()
+    destination = tmp_path / ".scaffold" / "registry.toml"
 
-    assert registry_path.exists()
+    copy_file_to_tmp_path(monkeypatch, tmp_path, source=registry_path, dest=destination)
+    monkeypatch.chdir(tmp_path)
 
-    copy_file_to_tmp_path(monkeypatch, tmp_path / "test_registry.toml", source=registry_path)
+    assert destination.is_file(), destination.resolve()
 
     # Invoke the `project new` command
     result = runner.invoke(app, ["project", "new", "test_name"])

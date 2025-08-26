@@ -7,7 +7,7 @@ from lichen_core.config import CONFIG_FILENAME
 from lichen_core.registry import ScaffoldSet
 from lichen_core.scaffold import Node
 from lichen_core.utils.discovery import tool_root
-from lichen_core.utils.io import write_toml
+from lichen_core.utils.io import make_file, write_toml
 
 
 def get_test_data(filename: str):
@@ -37,11 +37,18 @@ def patch_root_with_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path):
 
 
 ###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
-def copy_file_to_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path, source: Path):
-    # Copy file from source path to tmp_path
-    copyfile(source, tmp_path)
-
+def copy_file_to_tmp_path(
+    monkeypatch: MonkeyPatch, tmp_path: Path, source: Path, dest: Path
+):
     patch_root_with_tmp_path(monkeypatch, tmp_path)
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+
+    if not dest.exists():
+        make_file(dest)
+
+    # Copy file from source path to tmp_path
+    copyfile(source, dest)
 
 
 def make_test_config(
@@ -91,3 +98,7 @@ def expected_scaffold_set_values(
 
 def path_to_test_data(*parts: str) -> Path:
     return Path(__file__).parent / ".test_data" / Path(*parts)
+
+
+def get_registry_path():
+    return path_to_test_data("test_registry.toml")

@@ -6,11 +6,8 @@ from lichen_core.scaffold import Node, Scaffolder
 from tests.utils import (
     copy_file_to_tmp_path,
     expected_scaffold_set_values,
-    path_to_test_data,
+    get_registry_path,
 )
-
-
-REGISTRY_PATH = path_to_test_data("test_registry.toml")
 
 
 def test_scaffolder_instantiates_as_type_scaffolder():
@@ -76,10 +73,12 @@ def test_load_loads_registry_meta_data_into_memory(
     ctx = Context()
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
-    registry_file = "test_registry.toml"
-    destination = tmp_path / registry_file
+    registry_path = get_registry_path()
+    destination = tmp_path / ".scaffold" / "registry.toml"
 
-    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=REGISTRY_PATH)
+    copy_file_to_tmp_path(
+        monkeypatch, tmp_path=destination, source=registry_path, dest=destination
+    )
 
     # Instantiate scaffolder object
     scaff = Scaffolder(ctx, registry_path=destination)
@@ -112,10 +111,12 @@ def test_load_loads_nodes_list_into_memory(monkeypatch: MonkeyPatch, tmp_path: P
     ctx = Context()
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
-    registry_file = "test_registry.toml"
-    destination = tmp_path / registry_file
+    registry_path = get_registry_path()
+    destination = tmp_path / ".scaffold" / "registry.toml"
 
-    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=REGISTRY_PATH)
+    copy_file_to_tmp_path(
+        monkeypatch, tmp_path=destination, source=registry_path, dest=destination
+    )
 
     # Instantiate scaffolder object
     scaff = Scaffolder(ctx, registry_path=destination)
@@ -167,11 +168,12 @@ def test_save_saves_scaffold_data_to_registry(monkeypatch: MonkeyPatch, tmp_path
     ctx = Context()
 
     # Get .test_data/test_registry.toml filepath before patching to tmp_path
-    registry_file = "test_registry.toml"
-    destination = tmp_path / registry_file
+    registry_path = get_registry_path()
+    destination = tmp_path / ".scaffold" / "registry.toml"
+    destination.parent.mkdir(parents=True, exist_ok=True)
 
-    # Copy registry file to tmp_path
-    copy_file_to_tmp_path(monkeypatch, tmp_path=destination, source=REGISTRY_PATH)
+    copy_file_to_tmp_path(monkeypatch, tmp_path, source=registry_path, dest=destination)
+    monkeypatch.chdir(tmp_path)
 
     scaff = Scaffolder(ctx, registry_path=destination)
 

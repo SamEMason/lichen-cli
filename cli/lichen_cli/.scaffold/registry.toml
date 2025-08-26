@@ -2,100 +2,30 @@
 [default]
 version = "0.0.1"
 description = "Absolute MVP Lichen Stack file tree."
+nodes = [
+    # Global Scope
+    { type = "file", path = ".lichen/registry.toml", template = "scaffolds/default/.lichen_registry.template" },
+    { type = "file", path = ".gitignore", template = "scaffolds/default/.gitignore.template" },
+    { type = "file", path = ".env.example", template = "scaffolds/default/.env.example.template" },
+    { type = "file", path = "pyproject.toml", template = "scaffolds/default/pyproject.template" },
+    { type = "file", path = "requirements.txt", template = "scaffolds/default/requirements.template" },
+    { type = "file", path = "README.md", template = "scaffolds/default/README.template" },
+    { type = "file", path = "global.config.toml", template = "scaffolds/default/global.config.template" },
 
+    # Gateway Service
+    { type = "file", path = "services/gateway/src/main.py", template = "scaffolds/default/services/gateway/src_main.template" },
+    { type = "file", path = "services/gateway/src/routes.py", template = "scaffolds/default/services/gateway/src_routes.template" },
+    { type = "file", path = "services/gateway/requirements.txt", template = "scaffolds/default/services/gateway/requirements.template" },
+    { type = "file", path = "services/gateway/local.config.toml", template = "scaffolds/default/services/gateway/local.config.template" },
+    { type = "file", path = "services/gateway/.env.example", template = "scaffolds/default/services/gateway/.env.example.template" },
 
-# Global Scope
-[[default.nodes]]
-type = "file"
-path = ".lichen/registry.toml"
-template = "src/core/scaffold/templates/files/.lichen_registry.template"
+    # Worker Service
+    { type = "file", path = "services/worker/src/main.py", template = "scaffolds/default/services/worker/src_main.template" },
+    { type = "file", path = "services/worker/requirements.txt", template = "scaffolds/default/services/worker/requirements.template" },
+    { type = "file", path = "services/worker/local.config.toml", template = "scaffolds/default/services/worker/local.config.template" },
+    { type = "file", path = "services/worker/.env.example", template = "scaffolds/default/services/worker/.env.example.template" },
 
-[[default.nodes]]
-type = "file"
-path = ".gitignore"
-template = "src/core/scaffold/templates/files/.gitignore.template"
-
-[[default.nodes]]
-type = "file"
-path = ".env.example"
-template = "src/core/scaffold/templates/files/.env.example.template"
-
-[[default.nodes]]
-type = "file"
-path = "pyproject.toml"
-template = "src/core/scaffold/templates/files/pyproject.template"
-
-[[default.nodes]]
-type = "file"
-path = "requirements.txt"
-template = "src/core/scaffold/templates/files/requirements.template"
-
-[[default.nodes]]
-type = "file"
-path = "README.md"
-template = "src/core/scaffold/templates/files/README.template"
-
-[[default.nodes]]
-type = "file"
-path = "global.config.toml"
-template = "src/core/scaffold/templates/files/global.config.template"
-
-
-# Gateway Service
-[[default.nodes]]
-type = "file"
-path = "services/gateway/src/main.py"
-template = "src/core/scaffold/templates/files/services/gateway/src_main.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/gateway/src/routes.py"
-template = "src/core/scaffold/templates/files/services/gateway/src_routes.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/gateway/requirements.txt"
-template = "src/core/scaffold/templates/files/services/gateway/requirements.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/gateway/local.config.toml"
-template = "src/core/scaffold/templates/files/services/gateway/local.config.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/gateway/.env.example"
-template = "src/core/scaffold/templates/files/services/gateway/.env.example.template"
-
-# Worker Service
-[[default.nodes]]
-type = "file"
-path = "services/worker/src/main.py"
-template = "src/core/scaffold/templates/files/services/worker/src_main.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/worker/requirements.txt"
-template = "src/core/scaffold/templates/files/services/worker/requirements.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/worker/local.config.toml"
-template = "src/core/scaffold/templates/files/services/worker/local.config.template"
-
-[[default.nodes]]
-type = "file"
-path = "services/worker/.env.example"
-template = "src/core/scaffold/templates/files/services/worker/.env.example.template"
-
-
-# Shared modules
-[[default.nodes]]
-type = "file"
-path = "shared/utils.py"
-template = "src/core/scaffold/templates/files/shared/utils.template"
-
-[[default.nodes]]
-type = "file"
-path = "shared/logging.py"
-template = "src/core/scaffold/templates/files/shared/logging.template"
+    # Shared modules
+    { type = "file", path = "shared/utils.py", template = "scaffolds/default/shared/utils.template" },
+    { type = "file", path = "shared/logging.py", template = "scaffolds/default/shared/logging.template" },
+]
