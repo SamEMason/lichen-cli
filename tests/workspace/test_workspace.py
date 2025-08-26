@@ -1,9 +1,12 @@
 from pathlib import Path
-from pytest import MonkeyPatch, mark
+from pytest import MonkeyPatch
 
 from lichen_cli.workspace import Workspace
 from lichen_core.context import Context
-from tests.utils import make_test_config
+from tests.utils import (
+    make_test_config,
+    patch_root_with_tmp_path,
+)
 
 
 def test_workspace_instantiates_as_workspace():
@@ -22,12 +25,10 @@ def test_workspace_context_property_instantiates_as_context():
     assert isinstance(ws.context, Context)
 
 
-@mark.skip()
 def test_workspace_context_instantiates_as_passed_in_context(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("lichen_core.context.tool_root", lambda: tmp_path)
+    patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     modified_key = "project_name"
     modified_value = "test_project"
@@ -44,30 +45,6 @@ def test_workspace_context_instantiates_as_passed_in_context(
 
     # Assert workspace.context property is of type Context
     assert ws.context.config[modified_key] == modified_value
-
-
-@mark.skip()
-def test_workspace_context_instantiates_default_without_passed_in_context(
-    monkeypatch: MonkeyPatch, tmp_path: Path
-):
-    # Force get_project_root() to return isolated tmp_path
-    monkeypatch.setattr("lichen_core.context.tool_root", lambda: tmp_path)
-
-    expected_key = "project_name"
-    expected_value = None
-
-    # Instantiate Workspace object
-    ctx = Context()
-    ctx.config[expected_key] = expected_value
-
-    # Instantiate Workspace object
-    ws = Workspace()
-
-    # Assert workspace.context is not the out of scope context
-    assert ws.context is not ctx
-
-    # Assert workspace.context property is of type Context
-    assert ws.context.config[expected_key] == expected_value
 
 
 def test_workspace_auto_load_true_reads_disk(monkeypatch: MonkeyPatch, tmp_path: Path):

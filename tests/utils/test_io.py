@@ -1,7 +1,6 @@
 from pathlib import Path
-import pytest
 
-from lichen_core.utils.discovery import tool_root
+from lichen_cli.utils import find_tool_root
 from lichen_core.utils.io import (
     load_toml,
     make_dir,
@@ -11,13 +10,12 @@ from lichen_core.utils.io import (
 from tests.utils import path_to_test_data
 
 
-@pytest.mark.skip()
-def test_tool_root():
+def test_find_tool_root():
     # File in root
-    root_file = "pyproject.toml"
+    root_file = "config.toml"
 
-    # Get project root using tool_root
-    project_root = tool_root("lichen")
+    # Get project root using find_tool_root
+    project_root = find_tool_root()
 
     assert isinstance(project_root, Path)
 

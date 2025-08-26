@@ -1,9 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
 
 from lichen_core.config import Config, ALLOWED_KEYS, CONFIG_FILENAME
-from lichen_core.utils.discovery import tool_root
 from lichen_core.utils.io import load_toml, write_toml
 
 
@@ -13,25 +11,18 @@ ENV_SECTION = "dev"
 @dataclass
 class Context:
     config: Config = field(default_factory=Config)
-    project_root: Optional[Path] = None
+    project_root: Path = field(default_factory=Path)
     working_root: Path = field(default_factory=Path.cwd)
     selected_set: str = "default"
-    tool: str = "lichen_cli"
-
-    def __post_init__(self):
-        if self.project_root is None:
-            self.project_root = tool_root(self.tool)
 
     # Config lifecycle methods
     def load_config(self):
-        # Get project root directory to write config
-        if self.project_root is None:
-            raise ValueError("Project root was not initialized.")
-
         config_location = self.project_root / CONFIG_FILENAME
 
         if not config_location.exists():
-            return
+            raise FileNotFoundError(
+                f"Config file cannot be found at location: {config_location}"
+            )
 
         # Load properties from config.toml
         data = load_toml(config_location)
@@ -54,8 +45,7 @@ class Context:
             raise KeyError(f"Unknown key: {key}.")
 
         # Get project root directory to write config
-        project_root = tool_root(self.tool)
-        config_location = project_root / CONFIG_FILENAME
+        config_location = self.project_root / CONFIG_FILENAME
 
         # If config.toml doesn't exist, create empty dictionary
         if not config_location.exists():

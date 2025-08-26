@@ -1,10 +1,10 @@
 from pathlib import Path
 from typing import Optional, Sequence, TypedDict
 
+from lichen_cli.utils import find_tool_root
 from lichen_core.context import Context
 from lichen_core.registry import Registry, ScaffoldSet
 from lichen_core.scaffold.node import Node
-from lichen_core.utils.discovery import tool_root
 from lichen_core.utils.io import load_template, make_dir, make_file
 
 
@@ -31,9 +31,6 @@ class Scaffolder:
 
         # Create temporary scaffold.toml file within tmp_path
         if registry_path is None:
-            if self.context.project_root is None:
-                raise ValueError("Project root is not initialized.")
-
             self.registry_path = (
                 self.context.project_root / ".scaffold" / "registry.toml"
             )
@@ -54,6 +51,8 @@ class Scaffolder:
         set_name = self.selected_set["set_name"]
         self.load(set_name=set_name)
 
+        print(self.selected_set)
+
         # Extract the nodes from the selected set in memory
         nodes = self.selected_set["nodes"]
 
@@ -61,11 +60,10 @@ class Scaffolder:
         if nodes is None:
             raise ValueError("Nodes were not loaded properly.")
 
-        if self.context.project_root is not None:
-            # Build out project structure at target location with nodes
-            self.apply_nodes(
-                nodes=nodes, location=target, root_dir=self.context.project_root
-            )
+        # Build out project structure at target location with nodes
+        self.apply_nodes(
+            nodes=nodes, location=target, root_dir=self.context.project_root
+        )
 
     def apply_nodes(self, nodes: Sequence[Node], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
@@ -108,7 +106,7 @@ class Scaffolder:
 
     def _create_project_directory(self, name: str) -> Path:
         # Root and current working directory
-        root = tool_root("lichen")
+        root = find_tool_root()
         cwd = self.context.working_root
 
         # Create a temporary directory around new project if cwd is the root

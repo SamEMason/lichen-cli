@@ -2,10 +2,9 @@ from pathlib import Path
 from pytest import MonkeyPatch
 from typer.testing import CliRunner
 
-from lichen_core.context import Context
-from lichen_core.utils.io import write_toml
 from lichen_cli.main import app
-from tests.utils import patch_root_with_tmp_path
+from lichen_cli.utils import find_tool_root
+from tests.utils import copy_file_to_tmp_path, patch_root_with_tmp_path
 
 runner = CliRunner()
 
@@ -29,28 +28,14 @@ def test_destroy_command(monkeypatch: MonkeyPatch, tmp_path: Path):
 
 
 def test_new_command(monkeypatch: MonkeyPatch, tmp_path: Path):
-    patch_root_with_tmp_path(monkeypatch, tmp_path)
+    lichen_root = find_tool_root().parent.parent
 
-    # Instantiate Context object
-    ctx = Context()
+    # Get test_registry.toml from tests dir
+    registry_path = lichen_root / "tests" / ".test_data" / "test_registry.toml"
 
-    # Create temporary scaffold.toml file within tmp_path
-    if ctx.project_root is None:
-        raise ValueError("Registry file path was not initialized.")
+    assert registry_path.exists()
 
-    registry_path = ctx.project_root / ".scaffold/registry.toml"
-    print(registry_path)
-
-    write_toml(
-        registry_path,
-        {
-            "default": {
-                "version": "0.0.1",
-                "description": "A test description.",
-                "nodes": [],
-            }
-        },
-    )
+    copy_file_to_tmp_path(monkeypatch, tmp_path / "test_registry.toml", source=registry_path)
 
     # Invoke the `project new` command
     result = runner.invoke(app, ["project", "new", "test_name"])

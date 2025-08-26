@@ -4,7 +4,6 @@ from shutil import copyfile
 from typing import Any, Optional
 
 from lichen_core.config import CONFIG_FILENAME
-from lichen_core.context import Context
 from lichen_core.registry import ScaffoldSet
 from lichen_core.scaffold import Node
 from lichen_core.utils.discovery import tool_root
@@ -33,12 +32,8 @@ def get_test_data(filename: str):
 
 def patch_root_with_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path):
     """Patches tool_root() with tmp_path fixture"""
-    # Force tool_root() to return isolated tmp_path
-    monkeypatch.setattr(
-        f"lichen_core.utils.discovery.tool_root",
-        lambda name: "lichen",
-        raising=True,
-    )
+    # Force find_tool_root to return isolated tmp_path
+    monkeypatch.setattr(f"lichen_cli.utils.find_tool_root", lambda: tmp_path)
 
 
 ###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
@@ -64,12 +59,6 @@ def make_test_config(
 def registry_arguments(
     path: Optional[str | Path] = None, selected_set: Optional[str] = None
 ) -> tuple[Path, str]:
-
-    ctx = Context()
-
-    if ctx.project_root is None:
-        raise ValueError("Project root was not initialized.")
-
     # Instatiate registry file path with default value if None
     if path is None:
         path = path_to_test_data("test_registry.toml")

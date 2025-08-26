@@ -25,7 +25,6 @@ def test_context_includes_config_instance():
     assert isinstance(ctx.config, Config)
 
 
-@pytest.mark.skip()
 def test_load_config_method_loads_data_from_config_file(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
@@ -46,7 +45,6 @@ def test_load_config_method_loads_data_from_config_file(
     assert context.config["project_name"] == loaded_value
 
 
-@pytest.mark.skip()
 def test_load_config_method_keeps_default_values_when_config_file_is_empty(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
@@ -56,14 +54,13 @@ def test_load_config_method_keeps_default_values_when_config_file_is_empty(
     write_toml(tmp_path / CONFIG_FILENAME, {})
 
     # Assert default config properties remain after load
-    context = Context()
+    context = Context(project_root=tmp_path)
     context.load_config()
 
     for k, v in DEFAULT_CONFIGS.items():
         assert context.config[k] == v
 
 
-@pytest.mark.skip()
 def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
@@ -76,7 +73,7 @@ def test_load_config_method_raises_keyerror_if_loaded_key_not_allowed(
 
     # Assert load method raises KeyError
     with pytest.raises(KeyError):
-        Context().load_config()
+        Context(project_root=tmp_path).load_config()
 
 
 def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: Path):
@@ -94,14 +91,13 @@ def test_save_method_modifies_value_of_key(monkeypatch: MonkeyPatch, tmp_path: P
     assert context.config.project_name == expected_value
 
 
-@pytest.mark.skip()
 def test_save_method_modifies_config_file(monkeypatch: MonkeyPatch, tmp_path: Path):
     patch_root_with_tmp_path(monkeypatch, tmp_path)
 
     expected_value = "test_project"
 
     # Instantiate context object
-    context = Context()
+    context = Context(project_root=tmp_path)
 
     # Save the value: "test_project" to the project_name property
     context.save_config("project_name", expected_value)
@@ -130,7 +126,6 @@ def test_save_method_raises_keyerror_with_malformed_keys(
         context.save_config(malformed_key, value)
 
 
-@pytest.mark.skip()
 def test_save_method_creates_config_file_if_none_exist(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
@@ -140,7 +135,7 @@ def test_save_method_creates_config_file_if_none_exist(
     path = tmp_path / CONFIG_FILENAME
 
     # Instantiate context object
-    context = Context()
+    context = Context(project_root=tmp_path)
 
     # Assert that config.toml doesn't exist to start
     assert not path.exists()
