@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-def find_tool_root() -> Path:
+def find_tool_root(lichen_root: bool = False) -> Path:
     # Resolve file path of this file
     start = Path(__file__).resolve()
 
@@ -9,6 +9,8 @@ def find_tool_root() -> Path:
     for parent in start.parents:
         # If the parent of the parent contains `pyproject.toml` return it's child: `lichen_cli`
         if (parent.parent / "pyproject.toml").exists():
+            if lichen_root:
+                return parent.parents[2]
             return parent
 
     raise RuntimeError(f"Tool root not found.")
@@ -18,14 +20,13 @@ def is_in_project_dir() -> bool:
     # Resolve file path of this file
     start = Path.cwd()
 
-    if start.name == 'lichen':
+    if start.name == "lichen":
         return True
-    
+
     # Work upwards looking for the root cli directory
     for parent in start.parents:
         # If the parent of the parent contains `pyproject.toml` return it's child: `lichen_cli`
-        if parent.name == 'lichen':
-            return True 
-        
-    return False
+        if parent.name == "lichen":
+            return True
 
+    return False

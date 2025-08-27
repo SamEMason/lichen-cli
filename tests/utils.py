@@ -12,7 +12,7 @@ from lichen_core.utils.io import make_file, write_toml
 
 def get_test_data(filename: str):
     """Retrieve absolute filepath for test data files"""
-    root = find_tool_root().parents[2]
+    root = find_tool_root(lichen_root=True)
     relative_path = "tests/.test_data"
     target = root / relative_path / filename
 
@@ -31,7 +31,7 @@ def get_test_data(filename: str):
 
 
 def patch_root_with_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path):
-    """Patches tool_root() with tmp_path fixture"""
+    """Patches find_tool_root() with tmp_path fixture"""
     # Force find_tool_root to return isolated tmp_path
     monkeypatch.setattr(f"lichen_cli.utils.find_tool_root", lambda: tmp_path)
 
