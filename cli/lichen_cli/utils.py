@@ -9,6 +9,7 @@ def find_tool_root(lichen_root: bool = False) -> Path:
     for parent in start.parents:
         # If the parent of the parent contains `pyproject.toml` return it's child: `lichen_cli`
         if (parent.parent / "pyproject.toml").exists():
+            # If `lichen_root` is enabled return lichen repo root
             if lichen_root:
                 return parent.parents[2]
             return parent
