@@ -1,11 +1,11 @@
 from pathlib import Path
 from typing import Optional, Sequence, TypedDict
 
-from lichen_cli.utils import find_tool_root
 from lichen_core.context import Context
 from lichen_core.registry import Registry, ScaffoldSet
 from lichen_core.scaffold.node import Node
 from lichen_core.utils.io import load_template, make_dir, make_file
+from lichen_core.utils.discovery import is_in_project_dir
 
 
 class MetaData(TypedDict):
@@ -50,8 +50,6 @@ class Scaffolder:
         # Load the selected set from the registry into memory
         set_name = self.selected_set["set_name"]
         self.load(set_name=set_name)
-
-        print(self.selected_set)
 
         # Extract the nodes from the selected set in memory
         nodes = self.selected_set["nodes"]
@@ -106,11 +104,10 @@ class Scaffolder:
 
     def _create_project_directory(self, name: str) -> Path:
         # Root and current working directory
-        root = find_tool_root()
         cwd = self.context.working_root
 
         # Create a temporary directory around new project if cwd is the root
-        if cwd == root:
+        if is_in_project_dir(cwd):
             return cwd / self.context.config.tmp_dir / name
         return cwd / name
 
