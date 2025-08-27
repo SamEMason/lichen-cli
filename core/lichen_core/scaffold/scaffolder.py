@@ -63,6 +63,9 @@ class Scaffolder:
             nodes=nodes, location=target, root_dir=self.context.project_root
         )
 
+        # Save project name to config
+        self.context.save_config("project_name", name)
+
     def apply_nodes(self, nodes: Sequence[Node], location: Path, root_dir: Path):
         """Iteratively creates project structure at `location` using `nodes`"""
         # Iterate through file tree nodes and create scaffolding
