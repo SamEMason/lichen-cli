@@ -1,6 +1,5 @@
 from shutil import rmtree
 
-from lichen_cli.utils import find_tool_root
 from lichen_cli.workspace.base import BaseCapability
 from lichen_core.context import Context
 from lichen_core.scaffold import Scaffolder
@@ -19,9 +18,9 @@ class ProjectCapability(BaseCapability):
 
     def decimate(self) -> str:
         """Absolutely decimate the tmp_dir/ directory"""
-        root = find_tool_root()
+        cwd = self.context.working_root
         tmp_dir = self.context.config.tmp_dir
-        temp_path = root / tmp_dir
+        temp_path = cwd / tmp_dir
 
         if temp_path and temp_path.exists() and temp_path.is_dir():
             rmtree(temp_path)

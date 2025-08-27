@@ -6,13 +6,13 @@ from typing import Any, Optional
 from lichen_core.config import CONFIG_FILENAME
 from lichen_core.registry import ScaffoldSet
 from lichen_core.scaffold import Node
-from lichen_core.utils.discovery import tool_root
+from lichen_cli.utils import find_tool_root
 from lichen_core.utils.io import make_file, write_toml
 
 
 def get_test_data(filename: str):
     """Retrieve absolute filepath for test data files"""
-    root = tool_root("lichen")
+    root = find_tool_root().parents[2]
     relative_path = "tests/.test_data"
     target = root / relative_path / filename
 
