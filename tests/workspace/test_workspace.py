@@ -3,10 +3,7 @@ from pytest import MonkeyPatch
 
 from lichen_cli.workspace import Workspace
 from lichen_core.context import Context
-from tests.utils import (
-    make_test_config,
-    patch_root_with_tmp_path,
-)
+from tests.utils import make_test_config, patch_root_with_tmp_path, use_test_config_data
 
 
 def test_workspace_instantiates_as_workspace():
@@ -48,9 +45,8 @@ def test_workspace_context_instantiates_as_passed_in_context(
 
 
 def test_workspace_auto_load_true_reads_disk(monkeypatch: MonkeyPatch, tmp_path: Path):
-    # Create config.toml in tmp_path with test_data
-    test_data = {"dev": {"project_name": "test_project"}}
-    make_test_config(monkeypatch, tmp_path, test_data)
+    use_test_config_data(monkeypatch, tmp_path)
+    monkeypatch.chdir(tmp_path)
 
     # Instantiate Workspace object with autoload set to True
     ws = Workspace(autoload=True)

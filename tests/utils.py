@@ -7,7 +7,7 @@ from lichen_core.config import CONFIG_FILENAME
 from lichen_core.registry import ScaffoldSet
 from lichen_core.scaffold import Node
 from lichen_cli.utils import find_tool_root
-from lichen_core.utils.io import make_file, write_toml
+from lichen_core.utils.io import write_toml
 
 
 def get_test_data(filename: str):
@@ -30,10 +30,12 @@ def get_test_data(filename: str):
     return target
 
 
-def patch_root_with_tmp_path(monkeypatch: MonkeyPatch, tmp_path: Path):
+def patch_root_with_tmp_path(
+    monkeypatch: MonkeyPatch, tmp_path: Path, module: Optional[str] = "utils"
+):
     """Patches find_tool_root() with tmp_path fixture"""
     # Force find_tool_root to return isolated tmp_path
-    monkeypatch.setattr(f"lichen_cli.utils.find_tool_root", lambda: tmp_path)
+    monkeypatch.setattr(f"lichen_cli.{module}.find_tool_root", lambda: tmp_path)
 
 
 ###### NOTE: EXTEND TO HANDLE FILE NAME CHANGES AND DIRECTORY NESTING
@@ -44,11 +46,20 @@ def copy_file_to_tmp_path(
 
     dest.parent.mkdir(parents=True, exist_ok=True)
 
-    if not dest.exists():
-        make_file(dest)
-
     # Copy file from source path to tmp_path
     copyfile(source, dest)
+
+
+def use_test_config_data(
+    monkeypatch: MonkeyPatch, tmp_path: Path, module: Optional[str] = "utils"
+):
+    patch_root_with_tmp_path(monkeypatch, tmp_path, module)
+
+    test_config_path = path_to_test_data("test_config.toml")
+    dest = tmp_path / CONFIG_FILENAME
+
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    copyfile(test_config_path, dest)
 
 
 def make_test_config(

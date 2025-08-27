@@ -6,7 +6,7 @@ from typing import Any
 from lichen_core.config import Config, CONFIG_FILENAME, DEFAULT_CONFIGS
 from lichen_core.context import Context
 from lichen_core.utils.io import write_toml
-from tests.utils import patch_root_with_tmp_path
+from tests.utils import patch_root_with_tmp_path, use_test_config_data
 
 
 def test_context_instantiates_as_context():
@@ -28,13 +28,10 @@ def test_context_includes_config_instance():
 def test_load_config_method_loads_data_from_config_file(
     monkeypatch: MonkeyPatch, tmp_path: Path
 ):
-    patch_root_with_tmp_path(monkeypatch, tmp_path)
+    use_test_config_data(monkeypatch, tmp_path)
 
     default_value = None
     loaded_value = "test_project"
-
-    # Create config.toml at root with test property value
-    write_toml(tmp_path / CONFIG_FILENAME, {"dev": {"project_name": loaded_value}})
 
     # Assert default project_name value in memory before load
     context = Context()

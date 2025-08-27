@@ -1,12 +1,12 @@
 from lichen_core.context import Context
-from lichen_cli.utils import find_tool_root
+from lichen_cli import utils
 from lichen_cli.workspace.client import ClientCapability
 from lichen_cli.workspace.project import ProjectCapability
 
 
 class Workspace:
     def __init__(self, context: Context | None = None, autoload: bool = True):
-        root = find_tool_root()
+        root = utils.find_tool_root()
         self.context = context or Context(project_root=root)
         self.autoload = autoload
 
